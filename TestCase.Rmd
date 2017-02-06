@@ -101,4 +101,4 @@ test_that('',{
 # Tesing the function `f`, in testing f(1)
 # Your answer is 1, which is not equal to the correct answer 2 
 ```
-Compared with the error messages with previous two blocks, the line `Testing variable/expression: f(i)` is missing.
+Compared with the error messages with previous two blocks, the line `Testing variable/expression: f(i)` is removed.
