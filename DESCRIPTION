@@ -1,0 +1,87 @@
+Package: autotest
+Version: 0.1.0
+Title: Unit Testing for R
+Description: A unit testing system designed to be fun, flexible and easy to set
+    up.
+Authors@R: c(
+    person("Hadley", "Wickham", , "hadley@rstudio.com", c("aut", "cre")),
+    person("RStudio", role = "cph"),
+    person("Yalei", "Du", role = "cph"),
+    person("R Core team", role = "ctb",
+      comment = "Implementation of utils::recover()")
+    )
+URL: https://github.com/badbye/autotest
+BugReports: https://github.com/badbye/autotest/issues
+Depends:
+    R (>= 3.1.0)
+Imports:
+    digest,
+    crayon,
+    praise,
+    magrittr,
+    R6 (>= 2.2.0),
+    methods,
+    xml2
+Suggests:
+    devtools,
+    withr,
+    covr
+License: MIT + file LICENSE
+Collate:
+    'auto-test.R'
+    'colour-text.R'
+    'compare-time.R'
+    'compare.R'
+    'context.R'
+    'describe.R'
+    'error-handler.R'
+    'evaluate-promise.R'
+    'expect-comparison.R'
+    'expect-equal-to-reference.R'
+    'expect-equality.R'
+    'expect-inheritance.R'
+    'expect-length.R'
+    'expect-logical.R'
+    'expect-named.R'
+    'expect-output.R'
+    'reporter.R'
+    'expect-self-test.R'
+    'expect-that.R'
+    'expectation.R'
+    'expectations-matches.R'
+    'make-expectation.R'
+    'mock.R'
+    'old-school.R'
+    'praise.R'
+    'recover.R'
+    'reporter-check.R'
+    'reporter-debug.R'
+    'reporter-fail.R'
+    'reporter-junit.R'
+    'reporter-list.R'
+    'reporter-location.R'
+    'reporter-minimal.R'
+    'reporter-multi.R'
+    'reporter-rstudio.R'
+    'reporter-silent.R'
+    'reporter-stop.R'
+    'stack.R'
+    'reporter-summary.R'
+    'reporter-tap.R'
+    'reporter-teamcity.R'
+    'reporter-zzz.R'
+    'skip.R'
+    'source.R'
+    'teardown.R'
+    'test-compiled-code.R'
+    'test-example.R'
+    'test-files.R'
+    'test-package.R'
+    'test-path.R'
+    'test-that.R'
+    'traceback.R'
+    'try-again.R'
+    'utils.R'
+    'watcher.R'
+RoxygenNote: 5.0.1
+Roxygen: list(markdown = TRUE)

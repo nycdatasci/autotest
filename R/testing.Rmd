@@ -1,0 +1,109 @@
+## TODO
+1. stop once saw error
+2. turnoff
+```
+library(autotest)
+
+f = function(x) {
+  ifelse(x<5, x+1, x)
+}
+
+turnOffTraceback()
+test_that('', {
+  for (i in 1:5){
+    registerPreMsg('In testing f(%d)', i)
+    expect_equal(f(i), i + 1)
+  }
+})
+
+
+test_that('', {
+  expect_equal(f(1), 1 + 1)
+  expect_equal(f(5), 5 + 1)
+  expect_equal(f(6), 6 + 1)
+})
+```
+
+2. Other functions
+```
+['expect_is', 'expect_match', 
+'expect_gte', 'expect_length', 
+'expect_equal', 'expect_identical',  
+'expect_false', 'expect_true',
+]
+```
+
+3. Mannual
+
+```
+test_that('', {
+  for (i in 1:5){
+    registerPreMsg('In testing f(%d)', i)
+    expect_true(f(i) == i + 1)
+    registerPostMsg('hhhh')
+  }
+})
+```
+
+4. turnoff/turnon traceback
+
+```
+library(console)
+code1 = 'f = function(x) {
+  ifelse(x<5, x+1, x)
+}
+library(autotest)
+'
+code = "test_that('', {
+  for (i in 1:10){
+registerPreMsg('In testing f(%d)', i)
+expect_true(f(i) == i + 1)
+registerPostMsg('hhhh')
+}
+})"
+code2 = "test_that('', {
+registerPreMsg('In testing f(%d)', 1)
+expect_true(f(1) == 1 + 1)
+registerPreMsg('In testing f(%d)', 5)
+expect_true(f(5) == 5 + 1)
+})"
+run_console(code1)
+
+
+library(testthat)
+f = function(x) ifelse(x<5, x+1, x)
+test_that('', {
+  for (i in 1:10){
+    registerPreMsg('testing f(%d)', i)
+    registerPostMsg('-----------------')
+    expect_equal(f(i), i + 1)
+  }
+})
+
+withCallingHandlers(
+  eval({
+  for (i in 1:10){
+    expect_equal(f(i), i + 1)
+  }
+}),
+error = function(e) {cat('error')})
+```
+
+
+
+
+```{r}
+withCallingHandlers({
+  eval({1-'1'; a<<-2})
+},
+                    error = function(e) cat('error +1\n'))
+```
+
+
+```{r}
+f 
+tryCatch(
+  {}
+)
+```
+

@@ -1,0 +1,9 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^\.travis\.yml$
+^cran-comments\.md$
+^appveyor\.yml$
+^revdep$
+^.*\.o$
+^\.httr-oauth$
+^codecov\.yml$
