@@ -27,7 +27,7 @@
 #' })
 #' }
 test_that <- function(desc, code) {
-
+  ErrorHandler$initialize()
   code <- substitute(code)
   test_code(desc, code, env = parent.frame())
 }

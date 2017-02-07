@@ -101,4 +101,21 @@ test_that('',{
 # Tesing the function `f`, in testing f(1)
 # Your answer is 1, which is not equal to the correct answer 2 
 ```
-Compared with the error messages with previous two blocks, the line `Testing variable/expression: f(i)` is removed.
+Compared with the error messages with previous two blocks, the line `Testing variable/expression: f(i)` is removed. That is what `trace=FALSE` is doing.
+
+
+
+```{r}
+x = 1; y = 2
+test_that('', {
+  registerPreMsg('testing x')
+  expect_equal(x, 1)
+})
+test_that('', {
+  expect_equal(y, 1)
+})
+```
+
+
+
+
