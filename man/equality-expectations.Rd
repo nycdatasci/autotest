@@ -6,27 +6,29 @@
 \title{Expectation: is the object equal to a value?}
 \usage{
 expect_equal(object, expected, ..., info = NULL, label = NULL,
-  expected.label = NULL)
+  expected.label = NULL, trace = TRUE)
 }
 \arguments{
 \item{object}{object to test}
 
 \item{expected}{Expected value}
 
-\item{...}{other values passed to [all.equal()]}
+\item{...}{other values passed to \code{\link[=all.equal]{all.equal()}}}
 
 \item{info}{extra information to be included in the message (useful when
 writing tests in loops).}
 
-\item{label}{object label. When `NULL`, computed from deparsed object.}
+\item{label}{object label. When \code{NULL}, computed from deparsed object.}
 
-\item{expected.label}{Equivalent of `label` for shortcut form.}
+\item{expected.label}{Equivalent of \code{label} for shortcut form.}
 }
 \description{
-- `expect_identical` tests with [identical()]
-- `expect_equal` tests with [all.equal()]
-- `expect_equivalent` tests with [all.equal()] and
-  `check.attributes = FALSE`
+\itemize{
+\item \code{expect_identical} tests with \code{\link[=identical]{identical()}}
+\item \code{expect_equal} tests with \code{\link[=all.equal]{all.equal()}}
+\item \code{expect_equivalent} tests with \code{\link[=all.equal]{all.equal()}} and
+\code{check.attributes = FALSE}
+}
 }
 \examples{
 a <- 10
@@ -58,12 +60,9 @@ names(b) <- letters[1:3]
 expect_equivalent(a, b)
 }
 \seealso{
-Other expectations: \code{\link{comparison-expectations}},
-  \code{\link{expect_equal_to_reference}},
+Other expectations: \code{\link{expect_equal_to_reference}},
   \code{\link{expect_length}}, \code{\link{expect_match}},
-  \code{\link{expect_named}},
   \code{\link{inheritance-expectations}},
   \code{\link{logical-expectations}},
   \code{\link{output-expectations}}
 }
-

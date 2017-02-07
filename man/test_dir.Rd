@@ -10,18 +10,18 @@ test_dir(path, filter = NULL, reporter = default_reporter(),
 \arguments{
 \item{path}{path to tests}
 
-\item{filter}{If not `NULL`, only tests with file names matching this
+\item{filter}{If not \code{NULL}, only tests with file names matching this
 regular expression will be executed.  Matching will take on the file
-name after it has been stripped of `"test-"` and `".R"`.}
+name after it has been stripped of \code{"test-"} and \code{".R"}.}
 
 \item{reporter}{reporter to use}
 
 \item{env}{environment in which to execute the tests}
 
-\item{...}{Additional arguments passed to [grepl()] to control filtering.}
+\item{...}{Additional arguments passed to \code{\link[=grepl]{grepl()}} to control filtering.}
 
 \item{encoding}{File encoding, default is "unknown"
-`unknown`.}
+\code{unknown}.}
 
 \item{load_helpers}{Source helper files before running the tests?}
 }
@@ -29,8 +29,7 @@ name after it has been stripped of `"test-"` and `".R"`.}
 the results as a "autotest_results" (list)
 }
 \description{
-Test files start with `test` and are executed in alphabetical order
+Test files start with \code{test} and are executed in alphabetical order
 (but they shouldn't have dependencies). Helper files start with
-`helper` and loaded before any tests are run.
+\code{helper} and loaded before any tests are run.
 }
-

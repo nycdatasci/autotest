@@ -19,9 +19,15 @@
 #' expect_match(character(), ".")
 #' }
 expect_match <- function(object, regexp, ..., all = TRUE,
-                         info = NULL, label = NULL) {
+                         info = NULL, label = NULL, trace=TRUE) {
+  if (ErrorHandler$trace && trace){
+    pre_msg = sprintf("Testing variable/expression:  %s",
+                      deparse(substitute(object)))
+    ErrorHandler$setTesting(pre_msg)
+  }
   stopifnot(is.character(regexp), length(regexp) == 1)
-  label <- make_label(object, label)
+  # label <- make_label(object, label)
+  label <- deparse(substitute(object))
 
   stopifnot(is.character(object))
   if (length(object) == 0) {
@@ -30,19 +36,18 @@ expect_match <- function(object, regexp, ..., all = TRUE,
 
   matches <- grepl(regexp, object, ...)
 
-  if (length(object) == 1) {
-    values <- paste0("Actual value: \"", escape_regex(encodeString(object)), "\"")
-  } else {
-    values <- paste0("Actual values:\n",
-      paste0("* ", escape_regex(encodeString(object)), collapse = "\n"))
-  }
+  # if (length(object) == 1) {
+  #   values <- paste0("Actual value: \"", escape_regex(encodeString(object)), "\"")
+  # } else {
+  #   values <- paste0("Actual values:\n",
+  #     paste0("* ", escape_regex(encodeString(object)), collapse = "\n"))
+  # }
   expect(
     if (all) all(matches) else any(matches),
     sprintf(
-      "%s does not match %s.\n%s",
-      escape_regex(label),
-      encodeString(regexp, quote = '"'),
-      values
+      "%s does not match %s.",
+      label, # escape_regex(label),
+      encodeString(regexp, quote = '"')
     ),
     info = info
   )

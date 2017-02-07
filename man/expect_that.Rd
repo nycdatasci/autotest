@@ -15,7 +15,7 @@ is met, and if not, an error message to display.}
 \item{info}{extra information to be included in the message (useful when
 writing tests in loops).}
 
-\item{label}{object label. When `NULL`, computed from deparsed object.}
+\item{label}{object label. When \code{NULL}, computed from deparsed object.}
 }
 \value{
 the (internal) expectation result as an invisible list
@@ -23,15 +23,7 @@ the (internal) expectation result as an invisible list
 \description{
 An old style of testing that's no longer encouraged.
 }
-\examples{
-expect_that(5 * 2, equals(10))
-expect_that(sqrt(2) ^ 2, equals(2))
-\dontrun{
-expect_that(sqrt(2) ^ 2, is_identical_to(2))
-}
-}
 \seealso{
-[fail()] for an expectation that always fails.
+\code{\link[=fail]{fail()}} for an expectation that always fails.
 }
 \keyword{internal}
-

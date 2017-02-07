@@ -114,6 +114,9 @@ test_that('', {
 test_that('', {
   expect_equal(y, 1)
 })
+# AutoTestCaseError:
+# Testing variable/expression:  y
+# Your answer is 2, which is not equal to the correct answer 1
 ```
 
 

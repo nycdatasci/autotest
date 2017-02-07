@@ -4,7 +4,7 @@
 \alias{expect_length}
 \title{Expectation: does a vector have the specified length?}
 \usage{
-expect_length(object, n)
+expect_length(object, n, trace = TRUE)
 }
 \arguments{
 \item{object}{object to test}
@@ -23,12 +23,10 @@ expect_length(1:10, 1)
 }
 }
 \seealso{
-Other expectations: \code{\link{comparison-expectations}},
-  \code{\link{equality-expectations}},
+Other expectations: \code{\link{equality-expectations}},
   \code{\link{expect_equal_to_reference}},
-  \code{\link{expect_match}}, \code{\link{expect_named}},
+  \code{\link{expect_match}},
   \code{\link{inheritance-expectations}},
   \code{\link{logical-expectations}},
   \code{\link{output-expectations}}
 }
-

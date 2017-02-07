@@ -11,9 +11,15 @@
 #' \dontrun{
 #' expect_length(1:10, 1)
 #' }
-expect_length <- function(object, n) {
+expect_length <- function(object, n, trace=TRUE) {
   stopifnot(is.numeric(n), length(n) == 1)
-  lab <- label(object)
+  if (ErrorHandler$trace && trace){
+    pre_msg = sprintf("Testing variable/expression:  %s",
+                      deparse(substitute(object)))
+    ErrorHandler$setTesting(pre_msg)
+  }
+  # lab <- label(object)
+  lab <- deparse(substitute(object))
 
   if (!is_vector(object)) {
     fail(sprintf("%s is not a vector.", lab))
@@ -21,7 +27,7 @@ expect_length <- function(object, n) {
 
   expect(
     length(object) == n,
-    sprintf("%s has length %i, not length %i.", lab, length(object), n)
+    sprintf("The length of %s is %i, it should be %i.", lab, length(object), n)
   )
 
   invisible(object)

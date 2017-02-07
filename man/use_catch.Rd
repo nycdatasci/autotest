@@ -12,26 +12,25 @@ use_catch(dir = getwd())
 \description{
 Add the necessary infrastructure to enable C++ unit testing
 in \R packages with
-\href{https://github.com/philsquared/Catch}{Catch} and `autotest`.
+\href{https://github.com/philsquared/Catch}{Catch} and \code{autotest}.
 }
 \details{
-Calling `use_catch()` will:
-
-1. Create a file `src/test-runner.cpp`, which ensures that the
-   `autotest` package will understand how to run your package's
-   unit tests,
-
-2. Create an example test file `src/test-example.cpp`, which
-   showcases how you might use Catch to write a unit test, and
-
-3. Add a test file `tests/autotest/test-cpp.R`, which ensures that
-   `autotest` will run your compiled tests during invocations of
-   `devtools::test()` or `R CMD check`.
+Calling \code{use_catch()} will:
+\enumerate{
+\item Create a file \code{src/test-runner.cpp}, which ensures that the
+\code{autotest} package will understand how to run your package's
+unit tests,
+\item Create an example test file \code{src/test-example.cpp}, which
+showcases how you might use Catch to write a unit test, and
+\item Add a test file \code{tests/autotest/test-cpp.R}, which ensures that
+\code{autotest} will run your compiled tests during invocations of
+\code{devtools::test()} or \code{R CMD check}.
+}
 
 C++ unit tests can be added to C++ source files within the
-`src` directory of your package, with a format similar
-to \R code tested with `autotest`. Here's a simple example
-of a unit test written with `autotest` + Catch:
+\code{src} directory of your package, with a format similar
+to \R code tested with \code{autotest}. Here's a simple example
+of a unit test written with \code{autotest} + Catch:
 
 \preformatted{
 context("C++ Unit Test") {
@@ -44,31 +43,31 @@ context("C++ Unit Test") {
 
 When your package is compiled, unit tests alongside a harness
 for running these tests will be compiled into your \R package,
-with the C entry point `run_autotest_tests()`. `autotest`
+with the C entry point \code{run_autotest_tests()}. \code{autotest}
 will use that entry point to run your unit tests when detected.
 }
 \section{Functions}{
 
 
 All of the functions provided by Catch are
-available with the `CATCH_` prefix -- see
+available with the \code{CATCH_} prefix -- see
 \href{https://github.com/philsquared/Catch/blob/master/docs/assertions.md}{here}
-for a full list. `autotest` provides the
-following wrappers, to conform with `autotest`'s
+for a full list. \code{autotest} provides the
+following wrappers, to conform with \code{autotest}'s
 \R interface:
 
 \tabular{lll}{
 \strong{Function} \tab \strong{Catch} \tab \strong{Description} \cr
-`context` \tab `CATCH_TEST_CASE` \tab The context of a set of tests. \cr
-`test_that` \tab `CATCH_SECTION` \tab A test section. \cr
-`expect_true` \tab `CATCH_CHECK` \tab Test that an expression evaluates to `true`. \cr
-`expect_false` \tab `CATCH_CHECK_FALSE` \tab Test that an expression evalutes to `false`. \cr
-`expect_error` \tab `CATCH_CHECK_THROWS` \tab Test that evaluation of an expression throws an exception. \cr
-`expect_error_as` \tab `CATCH_CHECK_THROWS_AS` \tab Test that evaluation of an expression throws an exception of a specific class. \cr
+\code{context} \tab \code{CATCH_TEST_CASE} \tab The context of a set of tests. \cr
+\code{test_that} \tab \code{CATCH_SECTION} \tab A test section. \cr
+\code{expect_true} \tab \code{CATCH_CHECK} \tab Test that an expression evaluates to \code{true}. \cr
+\code{expect_false} \tab \code{CATCH_CHECK_FALSE} \tab Test that an expression evalutes to \code{false}. \cr
+\code{expect_error} \tab \code{CATCH_CHECK_THROWS} \tab Test that evaluation of an expression throws an exception. \cr
+\code{expect_error_as} \tab \code{CATCH_CHECK_THROWS_AS} \tab Test that evaluation of an expression throws an exception of a specific class. \cr
 }
 
-In general, you should prefer using the `autotest`
-wrappers, as `autotest` also does some work to
+In general, you should prefer using the \code{autotest}
+wrappers, as \code{autotest} also does some work to
 ensure that any unit tests within will not be compiled or
 run when using the Solaris Studio compilers (as these are
 currently unsupported by Catch). This should make it
@@ -79,7 +78,7 @@ easier to submit packages to CRAN that use Catch.
 
 
 If you'd like to write your own Catch test runner, you can
-instead use the `autotest::catchSession()` object in a file
+instead use the \code{autotest::catchSession()} object in a file
 with the form:
 
 \preformatted{
@@ -101,7 +100,7 @@ with custom arguments passed to the Catch session.
 
 
 If you'd like to use the C++ unit testing facilities provided
-by Catch, but would prefer not to use the regular `autotest`
+by Catch, but would prefer not to use the regular \code{autotest}
 \R testing infrastructure, you can manually run the unit tests
 by inserting a call to:
 
@@ -111,8 +110,8 @@ by inserting a call to:
 
 as necessary within your unit test suite.
 }
+
 \seealso{
 \href{https://github.com/philsquared/Catch}{Catch}, the
-  library used to enable C++ unit testing.
+library used to enable C++ unit testing.
 }
-

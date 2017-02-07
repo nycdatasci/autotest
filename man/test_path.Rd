@@ -14,6 +14,5 @@ A character vector giving the path.
 }
 \description{
 This function is designed to work both interatively and during tests,
-locating files in the `tests/autotest` directory
+locating files in the \code{tests/autotest} directory
 }
-

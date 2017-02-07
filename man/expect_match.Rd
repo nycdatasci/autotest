@@ -4,23 +4,24 @@
 \alias{expect_match}
 \title{Expectation: does string/output/message/warning/error match a regular expression?}
 \usage{
-expect_match(object, regexp, ..., all = TRUE, info = NULL, label = NULL)
+expect_match(object, regexp, ..., all = TRUE, info = NULL, label = NULL,
+  trace = TRUE)
 }
 \arguments{
 \item{object}{object to test}
 
 \item{regexp}{Regular expression to test against.}
 
-\item{...}{Additional arguments passed on to [grepl()], e.g.
-`ignore.case` or `fixed`.}
+\item{...}{Additional arguments passed on to \code{\link[=grepl]{grepl()}}, e.g.
+\code{ignore.case} or \code{fixed}.}
 
-\item{all}{Should all elements of actual value match `regexp` (TRUE),
+\item{all}{Should all elements of actual value match \code{regexp} (TRUE),
 or does only one need to match (FALSE)}
 
 \item{info}{extra information to be included in the message (useful when
 writing tests in loops).}
 
-\item{label}{object label. When `NULL`, computed from deparsed object.}
+\item{label}{object label. When \code{NULL}, computed from deparsed object.}
 }
 \description{
 Expectation: does string/output/message/warning/error match a regular expression?
@@ -37,12 +38,10 @@ expect_match(character(), ".")
 }
 }
 \seealso{
-Other expectations: \code{\link{comparison-expectations}},
-  \code{\link{equality-expectations}},
+Other expectations: \code{\link{equality-expectations}},
   \code{\link{expect_equal_to_reference}},
-  \code{\link{expect_length}}, \code{\link{expect_named}},
+  \code{\link{expect_length}},
   \code{\link{inheritance-expectations}},
   \code{\link{logical-expectations}},
   \code{\link{output-expectations}}
 }
-

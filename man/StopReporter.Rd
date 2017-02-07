@@ -9,8 +9,8 @@
 StopReporter
 }
 \description{
-The default reporter, executed when `expect_that` is run interactively.
-It responds by [stop()]ping on failures and doing nothing otherwise. This
+The default reporter, executed when \code{expect_that} is run interactively.
+It responds by \code{\link[=stop]{stop()}}ping on failures and doing nothing otherwise. This
 will ensure that a failing test will raise an error.
 }
 \details{
@@ -31,4 +31,3 @@ Other reporters: \code{\link{CheckReporter}},
   \code{\link{TeamcityReporter}}
 }
 \keyword{datasets}
-

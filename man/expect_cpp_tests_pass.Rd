@@ -10,13 +10,12 @@ expect_cpp_tests_pass(package)
 \item{package}{The name of the package to test.}
 }
 \description{
-Test compiled code in the package `package`. See
-[use_catch()] for more details.
+Test compiled code in the package \code{package}. See
+\code{\link[=use_catch]{use_catch()}} for more details.
 }
 \note{
 A call to this function will automatically be generated
-for you in `tests/autotest/test-cpp.R` after calling
-`use_catch()`; you should not need to manually call
+for you in \code{tests/autotest/test-cpp.R} after calling
+\code{use_catch()}; you should not need to manually call
 this expectation yourself.
 }
-

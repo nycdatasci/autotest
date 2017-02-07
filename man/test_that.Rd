@@ -21,7 +21,7 @@ contains multiple expectations.
 Tests are evaluated in their own environments, and should not affect
 global state.
 
-When run from the command line, tests return `NULL` if all
+When run from the command line, tests return \code{NULL} if all
 expectations are met, otherwise it raises an error.
 }
 \examples{
@@ -37,4 +37,3 @@ test_that("trigonometric functions match identities", {
 })
 }
 }
-

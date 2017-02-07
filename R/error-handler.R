@@ -132,12 +132,12 @@ getTesting <- function(){
 #' f = function(x) ifelse(x<5, x+1, x)
 #' # customize error messages
 #' \dontrun{
-#'  test_that('', {
-#'    for (i in 1:5){
-#'      registerPreMsg('In testing f(%d)', i)  # do not use `addPreMsg` here!
-#'      expect_equal(f(i), i + 1)
-#'    }
-#   })
+#' test_that("", {
+#'  for (i in 1:5){
+#'    registerPreMsg("In testing f(%d)", i)  # do not use `addPreMsg` here!
+#'    expect_equal(f(i), i + 1)
+#'  }
+#' })
 #' }
 #' @name error-handler
 NULL

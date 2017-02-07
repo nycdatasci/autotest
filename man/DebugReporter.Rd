@@ -9,7 +9,7 @@
 DebugReporter
 }
 \description{
-This reporter will call a modified version of [recover()] on all
+This reporter will call a modified version of \code{\link[=recover]{recover()}} on all
 broken expectations.
 }
 \seealso{
@@ -24,4 +24,3 @@ Other reporters: \code{\link{CheckReporter}},
   \code{\link{TeamcityReporter}}
 }
 \keyword{datasets}
-

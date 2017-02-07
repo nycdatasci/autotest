@@ -2,8 +2,8 @@
 % Please edit documentation in R/error-handler.R
 \name{trace}
 \alias{trace}
-\alias{turnOffTraceback}
 \alias{turnOnTraceback}
+\alias{turnOffTraceback}
 \title{Trun On/Off Tracking objects}
 \usage{
 turnOnTraceback()
@@ -27,4 +27,3 @@ test_that('', {
 })
 }
 }
-

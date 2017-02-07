@@ -16,6 +16,10 @@
 #' the `test.names` parameter only works for list.
 compare <- function(x, y, ...) {
   x_class = class(x); y_class = class(y)
+  if (any(is.na(x))){
+    msg = 'Your answer conatins missing values NA, please check again.'
+    return(comparison(FALSE, msg))
+  }
   if ( is.numeric(x) && is.numeric(y) ){
     UseMethod("compare", y)
   }else if (x_class != y_class &&  !inherits(x, y_class)){
@@ -77,9 +81,9 @@ compare_length <- function(x, y){
 }
 
 ## TODO
-# 1. time object
-# 2. ggplot object
-# 3. shiny object
+# 1. time object?
+# 2. ggplot object?
+# 3. shiny object?
 
 # Compare methods ---------------------------------------------------------------
 #' @export
@@ -101,12 +105,13 @@ compare.integer <- function(x, y, ...){
   if (length_res$equal != TRUE) return(length_res)
 
   # test values
+  if (all(x - y < 1e-15)){
+    return(comparison())
+  }
   if (x_length == 1){
-    if (x == y) return(comparison())
     msg = sprintf('Your answer is %s, which is not equal to the correct answer %s', x, y)
     return(comparison(FALSE, msg))
   }else{
-    if (all(x == y)) return(comparison())
     index = which(x != y)[1]
     msg = sprintf('The %sth element of your vector is %s, which is not equal to the correct answer %s', index, x[index], y[index])
     return(comparison(FALSE, msg))
@@ -144,13 +149,12 @@ compare.numeric <- function(x, y, ..., tolerance = 1e-5){
   if (length_res$equal != TRUE) return(length_res)
 
   # test values
+  compare_result = abs(x - y) <= tolerance
+  if (all(compare_result)) return(comparison())
   if (x_length == 1){
-    if (abs(x - y) <= tolerance) return(comparison())
     msg = sprintf('Your answer is %s, which is not equal to the correct answer %s', x, y)
     return(comparison(FALSE, msg))
   }else{
-    compare_result = abs(x - y) <= tolerance
-    if (all(compare_result)) return(comparison())
     index = which(!compare_result)[1]
     msg = sprintf('The %sth element of your vector is %s, which is not equal to the correct answer %s', index, x[index], y[index])
     return(comparison(FALSE, msg))

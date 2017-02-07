@@ -7,8 +7,7 @@
 default_reporter()
 }
 \description{
-This will be [SummaryReporter()] unless option
-`autotest.default_reporter` is set
+This will be \code{\link[=SummaryReporter]{SummaryReporter()}} unless option
+\code{autotest.default_reporter} is set
 }
 \keyword{internal}
-

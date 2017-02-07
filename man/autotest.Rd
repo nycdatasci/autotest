@@ -7,7 +7,7 @@
 \title{R package to make testing fun!}
 \description{
 Try the example below. Have a look at the references and learn more
-from function documentation such as [expect_that()].
+from function documentation such as \code{\link[=expect_that]{expect_that()}}.
 }
 \details{
 Software testing is important, but, in part because
@@ -18,15 +18,16 @@ and integrates with your existing workflow.
 }
 \section{Options}{
 
-- `autotest.use_colours`: Should the output be coloured? (Default:
-`TRUE`).
-
-- `autotest.summary.max_reports`: The maximum number of detailed test
+\itemize{
+\item \code{autotest.use_colours}: Should the output be coloured? (Default:
+\code{TRUE}).
+\item \code{autotest.summary.max_reports}: The maximum number of detailed test
 reports printed for the summary reporter (default: 15).
-
-- `autotest.summary.omit_dots`: Omit progress dots in the summary reporter
-(default: `FALSE`).
+\item \code{autotest.summary.omit_dots}: Omit progress dots in the summary reporter
+(default: \code{FALSE}).
 }
+}
+
 \examples{
 library(autotest)
 a <- 9
@@ -42,4 +43,3 @@ Wickham, H (2011). autotest: Get Started with Testing.
 
 \url{http://adv-r.had.co.nz/Testing.html}
 }
-

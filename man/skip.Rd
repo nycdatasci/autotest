@@ -4,11 +4,11 @@
 \alias{skip}
 \alias{skip_if_not}
 \alias{skip_if_not_installed}
-\alias{skip_on_appveyor}
-\alias{skip_on_bioc}
 \alias{skip_on_cran}
 \alias{skip_on_os}
 \alias{skip_on_travis}
+\alias{skip_on_appveyor}
+\alias{skip_on_bioc}
 \title{Skip a test.}
 \usage{
 skip(message)
@@ -30,7 +30,7 @@ skip_on_bioc()
 \arguments{
 \item{message}{A message describing why the test was skipped.}
 
-\item{condition}{Boolean condition to check. If not `TRUE`, will
+\item{condition}{Boolean condition to check. If not \code{TRUE}, will
 skip the test.}
 
 \item{pkg}{Name of package to check for}
@@ -38,7 +38,7 @@ skip the test.}
 \item{minimum_version}{Minimum required version for the package}
 
 \item{os}{Character vector of system names. Supported values are
-`"windows"`, `"mac"`, `"linux"` and `"solaris"`.}
+\code{"windows"}, \code{"mac"}, \code{"linux"} and \code{"solaris"}.}
 }
 \description{
 This function allows you to skip a test if it's not currently available.
@@ -47,28 +47,28 @@ suite to fail.
 }
 \section{Helpers}{
 
-`skip_if_not()` works like [stopifnot()], generating
+\code{skip_if_not()} works like \code{\link[=stopifnot]{stopifnot()}}, generating
 a message automatically based on the first argument.
 
-`skip_on_cran()` skips tests on CRAN, using the `NOT_CRAN`
+\code{skip_on_cran()} skips tests on CRAN, using the \code{NOT_CRAN}
 environment variable set by devtools.
 
-`skip_on_travis()` skips tests on travis by inspecting the
-`TRAVIS` environment variable.
+\code{skip_on_travis()} skips tests on travis by inspecting the
+\code{TRAVIS} environment variable.
 
-`skip_on_appveyor()` skips tests on appveyor by inspecting the
-`APPVEYOR` environment variable.
+\code{skip_on_appveyor()} skips tests on appveyor by inspecting the
+\code{APPVEYOR} environment variable.
 
-`skip_on_bioc()` skips tests on Bioconductor by inspecting the
-`BBS_HOME` environment variable.
+\code{skip_on_bioc()} skips tests on Bioconductor by inspecting the
+\code{BBS_HOME} environment variable.
 
-`skip_if_not_installed()` skips a tests if a package is not installed
+\code{skip_if_not_installed()} skips a tests if a package is not installed
 or cannot be loaded
 (useful for suggested packages).
 It loads the package as a side effect, because the package is likely to be
 used anyway.
 }
+
 \examples{
 if (FALSE) skip("No internet connection")
 }
-

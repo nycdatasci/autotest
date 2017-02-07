@@ -12,12 +12,6 @@
 #' @keywords internal
 #' @export
 #' @seealso [fail()] for an expectation that always fails.
-#' @examples
-#' expect_that(5 * 2, equals(10))
-#' expect_that(sqrt(2) ^ 2, equals(2))
-#' \dontrun{
-#' expect_that(sqrt(2) ^ 2, is_identical_to(2))
-#' }
 expect_that <- function(object, condition, info = NULL, label = NULL) {
   condition(object)
 }

@@ -19,7 +19,7 @@ test_file(path, reporter = default_reporter(), env = test_env(),
 \item{load_helpers}{Source helper files before running the tests?}
 
 \item{encoding}{File encoding, default is "unknown"
-`unknown`.}
+\code{unknown}.}
 }
 \value{
 the results as a "autotest_results" (list)
@@ -27,4 +27,3 @@ the results as a "autotest_results" (list)
 \description{
 Run all tests in specified file.
 }
-

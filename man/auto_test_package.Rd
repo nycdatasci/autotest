@@ -15,7 +15,6 @@ auto_test_package(pkg = ".", reporter = default_reporter())
 Watches a package for changes, rerunning tests as appropriate.
 }
 \seealso{
-[auto_test()] for details on how method works
+\code{\link[=auto_test]{auto_test()}} for details on how method works
 }
 \keyword{debugging}
-

@@ -14,7 +14,7 @@ use only.}
 }
 \description{
 Code in a teardown block is guaranteed to be run upon completion of a test
-file. Multiple calls to `teardown` will be executed in the order they
+file. Multiple calls to \code{teardown} will be executed in the order they
 were created.
 }
 \examples{
@@ -26,4 +26,3 @@ teardown{
 }
 }
 }
-

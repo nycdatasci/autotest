@@ -11,9 +11,8 @@ find_reporter(reporter)
 }
 \description{
 If not found, will return informative error message.
-Pass a character vector to create a [MultiReporter] composed
+Pass a character vector to create a \link{MultiReporter} composed
 of individual reporters.
 Will return null if given NULL.
 }
 \keyword{internal}
-

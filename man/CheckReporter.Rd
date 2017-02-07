@@ -9,7 +9,7 @@
 CheckReporter
 }
 \description{
-`R CMD check` displays only the last 13 lines of the result, so this
+\code{R CMD check} displays only the last 13 lines of the result, so this
 report is design to ensure that you see something useful there.
 }
 \seealso{
@@ -24,4 +24,3 @@ Other reporters: \code{\link{DebugReporter}},
   \code{\link{TeamcityReporter}}
 }
 \keyword{datasets}
-

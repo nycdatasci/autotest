@@ -2,7 +2,7 @@
 % Please edit documentation in R/reporter-list.R
 \name{autotest_results}
 \alias{autotest_results}
-\title{Create a `autotest_results` object from the test results
+\title{Create a \code{autotest_results} object from the test results
 as stored in the ListReporter results field.}
 \usage{
 autotest_results(results)
@@ -11,13 +11,12 @@ autotest_results(results)
 \item{results}{a list as stored in ListReporter}
 }
 \value{
-its list argument as a `autotest_results` object
+its list argument as a \code{autotest_results} object
 }
 \description{
-Create a `autotest_results` object from the test results
+Create a \code{autotest_results} object from the test results
 as stored in the ListReporter results field.
 }
 \seealso{
 ListReporter
 }
-
