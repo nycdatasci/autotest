@@ -70,40 +70,8 @@ expect_true(f(5) == 5 + 1)
 run_console(code1)
 
 
-library(testthat)
-f = function(x) ifelse(x<5, x+1, x)
-test_that('', {
-  for (i in 1:10){
-    registerPreMsg('testing f(%d)', i)
-    registerPostMsg('-----------------')
-    expect_equal(f(i), i + 1)
-  }
-})
-
-withCallingHandlers(
-  eval({
-  for (i in 1:10){
-    expect_equal(f(i), i + 1)
-  }
-}),
-error = function(e) {cat('error')})
 ```
 
 
 
-
-```{r}
-withCallingHandlers({
-  eval({1-'1'; a<<-2})
-},
-                    error = function(e) cat('error +1\n'))
-```
-
-
-```{r}
-f 
-tryCatch(
-  {}
-)
-```
 

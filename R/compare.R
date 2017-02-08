@@ -16,7 +16,8 @@
 #' the `test.names` parameter only works for list.
 compare <- function(x, y, ...) {
   x_class = class(x); y_class = class(y)
-  if (any(is.na(x))){
+  if (identical(x, y)) return(comparison())
+  if (anyNA(x)){
     msg = 'Your answer conatins missing values NA, please check again.'
     return(comparison(FALSE, msg))
   }
@@ -24,9 +25,9 @@ compare <- function(x, y, ...) {
     UseMethod("compare", y)
   }else if (x_class != y_class &&  !inherits(x, y_class)){
     msg = sprintf('We expect your answer returns type "%s", but it returns "%s" instead.', y_class, x_class)
-    if (all(is.null(x) || is.na(x))){
+    if (all(is.null(x))){
       msg = paste(msg,
-                  'Do you forget to return something in your function definition?',
+                  '\nDo you forget to return something in your function definition?',
                   sep = '\n'
                   )
     }
@@ -98,14 +99,14 @@ compare.default <- function(x, y, ..., max_diffs = 9){
 }
 
 #' @export
-compare.integer <- function(x, y, ...){
+compare.integer <- function(x, y, ..., tolerance=1e-5){
   # test length
   x_length = length(x); y_length = length(y)
   length_res = compare_length(x, y)
   if (length_res$equal != TRUE) return(length_res)
 
   # test values
-  if (all(x - y < 1e-15)){
+  if (all(x - y < tolerance) || all(x == y)){
     return(comparison())
   }
   if (x_length == 1){
@@ -129,12 +130,11 @@ compare.character <- function(x, y, ...){
   if (length_res$equal != TRUE) return(length_res)
 
   # test values
+  if (identical(as.character(x), as.character(y))) return(comparison())
   if (x_length == 1){
-    if (x == y) return(comparison())
     msg = sprintf('Your answer is "%s", which is not equal to the correct answer "%s"', x, y)
     return(comparison(FALSE, msg))
   }else{
-    if (all(x == y)) return(comparison())
     index = which(x != y)[1]
     msg = sprintf('The %sth element of your vector is "%s", which is not equal to the correct answer "%s"', index, x[index], y[index])
     return(comparison(FALSE, msg))
@@ -149,7 +149,7 @@ compare.numeric <- function(x, y, ..., tolerance = 1e-5){
   if (length_res$equal != TRUE) return(length_res)
 
   # test values
-  compare_result = abs(x - y) <= tolerance
+  compare_result = abs(x - y) <= tolerance | x == y
   if (all(compare_result)) return(comparison())
   if (x_length == 1){
     msg = sprintf('Your answer is %s, which is not equal to the correct answer %s', x, y)
@@ -167,12 +167,18 @@ compare.factor <- function(x, y, ...){
   x_length = length(x); y_length = length(y)
   length_res = compare_length(x, y)
   if (length_res$equal != TRUE) return(length_res)
-
+  # test sorted factor
+  if (is.ordered(y) && !is.ordered(x)){
+    msg = 'The answer is an ordered factor, your factor is not unordered.\nUse the `as.ordered` function to convert you answer to an ordered factor.'
+    return(comparison(FALSE, msg))
+  }
   # test levels
   x_levels = levels(x); y_levels = levels(y)
-  if ( all(x_levels != y_levels) ){
-    msg = 'The levels of your factor is: %s.\nWhile the levles of the correct answer is: %s'
-    return(comparison(FALSE, sprintf(msg, x_levels, y_levels)))
+  if ( !identical(x_levels, y_levels) ){
+    msg = sprintf('The levels of your factor is: [%s].\nWhile the levles of the correct answer is: [%s]',
+                  paste0(x_levels, collapse = ', '),
+                  paste0(y_levels, collapse = ', '))
+    return(comparison(FALSE, msg))
   }
 
   # test values
@@ -195,16 +201,19 @@ compare.list <- function(x, y, ..., test.names = TRUE){
   if (length_res$equal != TRUE) return(length_res)
 
   # test names
-  if ( test.names && all(names(x) != names(y)) ){
-    msg=sprintf('The names of your list is %s, which is not euqal to the correct answer %s', names(x), names(y))
+  if ( test.names && any(names(x) != names(y)) ){
+    msg=sprintf('The names of your list is [%s], which is not euqal to the correct answer [%s]',
+                paste0(names(x), collapse = ', '),
+                paste0(names(y), collapse = ', '))
     return(comparison(FALSE, msg))
   }
 
   # test values
   for (i in seq_along(x)){
-    if ( all.equal(x[[i]], y[[i]], ...) ) {
-      msg = sprintf('The %sth element of your list is %s, which is not equal to the correct answer %s',
-                    index, x[[i]], y[[i]])
+    res = compare(x[[i]], y[[i]], ...)
+    if (!res$equal) {
+      msg = sprintf('The type of the %dth element in your list is `%s`.\nIn testing the %dth element:\n%s',
+                    i, class(x[[i]]), i, res$message)
       return(comparison(FALSE, msg))
     }
   }
@@ -215,7 +224,7 @@ compare.list <- function(x, y, ..., test.names = TRUE){
 compare.matrix <- function(x, y, ..., tolerance = 1e-5){
   # test dimension
   x_dim=dim(x); y_dim = dim(y)
-  if (!all(x_dim == y_dim)){
+  if (any(x_dim != y_dim)){
     msg = sprintf('The dimension of your matrix is (%s), which is not equal to the dimension of correct answer: (%s).',
                   paste0(x_dim, collapse = ','),
                   paste0(y_dim, collapse = ',')
@@ -224,12 +233,17 @@ compare.matrix <- function(x, y, ..., tolerance = 1e-5){
   }
 
   # test values
-  if ( (class(x[1, 1]) == 'numeric' && class(y[1, 1]) == 'numeric') ){
-    compare_res = abs(x - y) <= tolerance
+  if ( is.numeric(x) && is.numeric(y) ){
+    compare_res = abs(x - y) <= tolerance | x == y
+  }else if (class(x[1,1]) != class(y[1,1])){
+    msg = sprintf('The type of the data in your matrix is `%s`, which should be `%s`',
+                  class(x[1,1]), class(y[1,1])
+                  )
+    return(comparison(FALSE, msg))
   }else{
     compare_res = x == y
   }
-  if (!all(compare_res)){
+  if (any(!compare_res)){
     index = which(!compare_res, arr.ind=T)[1, ]
     msg = 'The value in %sth row, %sth column of your matrix is %s, which is not equal to the correct answer %s'
     msg = sprintf(msg, index[1], index[2], x[index[1], index[2]], y[index[1], index[2]])
@@ -269,27 +283,33 @@ compare.data.frame <- function(x, y, ..., tolerance = 1e-5, test.rowname=FALSE, 
 
   # test values
   for (col in colnames(y)){
-    # test class of column
-    x_class = class(x[, col]); y_class = class(y[, col])
-    is_col_numeric = is.numeric(x) && is.numeric(y)
-    if (x_class != y_class & !is_col_numeric){
-      msg = sprintf('The data type of the column "%s" in your data.frame is %s, which should be %s',
-                    col, x_class, y_class)
+    res = compare(x[, col], y[, col], ...)
+    if (!res$equal) {
+      msg = sprintf('Testing the column `%s` in your data frame:\n%s',
+                    col, res$message)
       return(comparison(FALSE, msg))
     }
-
-    # test value of column
-    if (y_class == 'numeric'){
-      col_val_diff = abs(x[[col]] - y[[col]]) <= tolerance
-    }else{
-      col_val_diff = x[[col]] == y[[col]]
-    }
-    if (!all(col_val_diff)){
-      index = which(!col_val_diff)[1]
-      msg = sprintf('The %ith row, "%s" column of your data.frame is %s, which is not equal to the correct answer %s',
-                    index, col, x[index, col], y[index, col])
-      return(comparison(FALSE, msg))
-    }
+    # # test class of column
+    # x_class = class(x[, col]); y_class = class(y[, col])
+    # is_col_numeric = is.numeric(x) && is.numeric(y)
+    # if (x_class != y_class & !is_col_numeric){
+    #   msg = sprintf('The data type of the column "%s" in your data.frame is %s, which should be %s',
+    #                 col, x_class, y_class)
+    #   return(comparison(FALSE, msg))
+    # }
+    #
+    # # test value of column
+    # if (y_class == 'numeric'){
+    #   col_val_diff = abs(x[[col]] - y[[col]]) <= tolerance | x[[col]] == y[[col]]
+    # }else{
+    #   col_val_diff = x[[col]] == y[[col]]
+    # }
+    # if (!all(col_val_diff)){
+    #   index = which(!col_val_diff)[1]
+    #   msg = sprintf('The %ith row, "%s" column of your data.frame is %s, which is not equal to the correct answer %s',
+    #                 index, col, x[index, col], y[index, col])
+    #   return(comparison(FALSE, msg))
+    # }
   }
 
   return(comparison())

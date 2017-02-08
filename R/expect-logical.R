@@ -38,13 +38,13 @@ expect_true <- function(object, info = NULL, label = NULL, trace=TRUE) {
   }
   if (class(object) != 'logical'){
     expect(FALSE,
-           sprintf("The type of your answer is %s, it should be logical", class(object)),
+           sprintf("The type of your answer is %s, the type should be logical", class(object)),
            info = info)
   }else{
     expect(
       identical(as.vector(object), rep(TRUE, length(object))),
       ifelse(length(object) == 1,
-             sprintf("Your answer is %s, it should be TRUE", object),
+             sprintf("Your answer is %s, the type should be TRUE", object),
              sprintf("All the elements of your answer should be exactly TRUE.")
       ),
       info = info

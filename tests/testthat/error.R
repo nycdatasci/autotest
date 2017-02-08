@@ -1,6 +1,3 @@
-library(autotest)
-options(autotest.use_colours = FALSE)
-
 error_test <- function(error_code_vec){
   count = 0; mid_count = 0
   handle_msg = function(e) {
@@ -29,5 +26,3 @@ error_test <- function(error_code_vec){
     )
   }
 }
-
-testthat::test_check("autotest")

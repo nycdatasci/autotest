@@ -27,7 +27,7 @@ expect_length <- function(object, n, trace=TRUE) {
 
   expect(
     length(object) == n,
-    sprintf("The length of %s is %i, it should be %i.", lab, length(object), n)
+    sprintf("The length of %s is %s, it should be %s.", lab, length(object), n)
   )
 
   invisible(object)

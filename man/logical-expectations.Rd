@@ -4,11 +4,15 @@
 \alias{logical-expectations}
 \alias{expect_true}
 \alias{expect_false}
+\alias{expect_na}
 \title{Expectation: is the object true/false?}
 \usage{
 expect_true(object, info = NULL, label = NULL, trace = TRUE)
 
-expect_false(object, info = NULL, label = NULL)
+expect_false(object, info = NULL, label = NULL, trace = TRUE)
+
+expect_na(object, info = NULL, label = NULL, method = "all",
+  trace = TRUE)
 }
 \arguments{
 \item{object}{object to test}

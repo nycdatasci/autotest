@@ -94,7 +94,7 @@ test_that('',{
 ### 3. Implement testing functions.
 
 - `expect_equal`: done
-- `expect_false`, `expect_true`: done
+- `expect_false`, `expect_true`, `expect_na`: done
 - `expect_is`, `expect_length` : done
 - `expect_match`, `expect_error`, `expect_output`: done
 
