@@ -30,15 +30,13 @@ NULL
 #' @export
 #' @rdname inheritance-expectations
 expect_is <- function(object, class, info = NULL, label = NULL, trace=TRUE) {
-  stopifnot(is.character(class))
-  if (ErrorHandler$trace && trace){
-    pre_msg = sprintf("Testing variable/expression:  %s",
-                      deparse(substitute(object)))
-    ErrorHandler$setTesting(pre_msg)
-  }
-
   # lab <- make_label(object, label)
   lab <- deparse(substitute(object))
+  stopifnot(is.character(class))
+  if (ErrorHandler$trace && trace){
+    ErrorHandler$setTesting("Testing variable/expression:  %s", lab)
+  }
+
   act <- klass(object)
   exp <- paste(class, collapse = "/")
 

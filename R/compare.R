@@ -17,14 +17,17 @@
 compare <- function(x, y, ...) {
   x_class = class(x); y_class = class(y)
   if (identical(x, y)) return(comparison())
-  if (anyNA(x)){
-    msg = 'Your answer conatins missing values NA, please check again.'
-    return(comparison(FALSE, msg))
-  }
+  try(
+    if (anyNA(x)){
+      msg = 'Your answer conatins missing values NA, please check again.'
+      return(comparison(FALSE, msg))
+    },
+    silent=TRUE
+  )
   if ( is.numeric(x) && is.numeric(y) ){
     UseMethod("compare", y)
   }else if (x_class != y_class &&  !inherits(x, y_class)){
-    msg = sprintf('We expect your answer returns type "%s", but it returns "%s" instead.', y_class, x_class)
+    msg = sprintf('We expect your answer returns type "%s", but it returns "%s" instead.', y_class, x_class[1])
     if (all(is.null(x))){
       msg = paste(msg,
                   '\nDo you forget to return something in your function definition?',
@@ -99,7 +102,7 @@ compare.default <- function(x, y, ..., max_diffs = 9){
 }
 
 #' @export
-compare.integer <- function(x, y, ..., tolerance=1e-5){
+compare.integer <- function(x, y, ..., tolerance=1e-15){
   # test length
   x_length = length(x); y_length = length(y)
   length_res = compare_length(x, y)
@@ -153,12 +156,12 @@ compare.numeric <- function(x, y, ..., tolerance = 1e-5){
   if (all(compare_result)) return(comparison())
   if (x_length == 1){
     msg = sprintf('Your answer is %s, which is not equal to the correct answer %s', x, y)
-    return(comparison(FALSE, msg))
   }else{
     index = which(!compare_result)[1]
     msg = sprintf('The %sth element of your vector is %s, which is not equal to the correct answer %s', index, x[index], y[index])
-    return(comparison(FALSE, msg))
   }
+  msg = paste(msg, '\nThe maximum tolerance is ', tolerance, sep='')
+  return(comparison(FALSE, msg))
 }
 
 #' @export
@@ -212,7 +215,7 @@ compare.list <- function(x, y, ..., test.names = TRUE){
   for (i in seq_along(x)){
     res = compare(x[[i]], y[[i]], ...)
     if (!res$equal) {
-      msg = sprintf('The type of the %dth element in your list is `%s`.\nIn testing the %dth element:\n%s',
+      msg = sprintf('The type of the %dth element%s in your list is `%s`.\nIn testing the %dth element:\n%s',
                     i, class(x[[i]]), i, res$message)
       return(comparison(FALSE, msg))
     }
@@ -268,8 +271,9 @@ compare.data.frame <- function(x, y, ..., tolerance = 1e-5, test.rowname=FALSE, 
   if (test.colname){
     col_diff = setdiff(colnames(y), colnames(x))
     if ( length(col_diff) > 0){
-      msg = sprintf('The columns names of your data.frame are (%s). It does not contain the following columns: (%s)',
+      msg = sprintf('The columns names of your data.frame are [%s].\nThe column names should be: [%s].\nYou columns do not contain: [%s].',
                     paste(colnames(x), collapse = ','),
+                    paste(colnames(y), collapse = ','),
                     paste(col_diff, collapse = ',')
       )
       return(comparison(FALSE, msg))

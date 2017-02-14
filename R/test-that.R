@@ -116,11 +116,12 @@ test_code <- function(test, code, env = test_env(), skip_on_empty = TRUE) {
   }
   handle_expectation <- function(e) {
     handled <<- TRUE
-    if (expectation_broken(e)){
-      return()
-    }
     e$expectation_calls <- frame_calls(11, 6)
     register_expectation(e)
+    if (expectation_broken(e)){
+      on.exit(get_reporter()$end_test(context = get_reporter()$.context, test = test))
+      return()
+    }
     invokeRestart("continue_test")
   }
   handle_warning <- function(e) {

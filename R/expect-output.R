@@ -89,12 +89,10 @@ expect_output <- function(object, regexp = NULL, ...,
                           info = NULL, label = NULL, trace=TRUE) {
 
   # lab <- make_label(object, label)
-  if (ErrorHandler$trace && trace){
-    pre_msg = sprintf("Testing variable/expression:  %s",
-                      deparse(substitute(object)))
-    ErrorHandler$setTesting(pre_msg)
-  }
   lab <- deparse(substitute(object))
+  if (ErrorHandler$trace && trace){
+    ErrorHandler$setTesting("Testing variable/expression:  %s", lab)
+  }
   output <- capture_output(object)
 
   if (identical(regexp, NA)) {
@@ -157,13 +155,11 @@ expect_output_file <- function(object, file, update = FALSE, ...,
 #' @rdname output-expectations
 expect_error <- function(object, regexp = NULL, class = NULL, ..., info = NULL,
                          label = NULL, trace=TRUE) {
-  if (ErrorHandler$trace && trace){
-    pre_msg = sprintf("Testing variable/expression:  %s",
-                      deparse(substitute(object)))
-    ErrorHandler$setTesting(pre_msg)
-  }
   # lab <- make_label(object, label)
   lab <- deparse(substitute(object))
+  if (ErrorHandler$trace && trace){
+    ErrorHandler$setTesting("Testing variable/expression:  %s", lab)
+  }
   if (!is.null(regexp) && !is.null(class)) {
     stop("You may only specific one of `regexp` and `class`", call. = FALSE)
   }

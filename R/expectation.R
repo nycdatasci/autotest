@@ -39,7 +39,8 @@ expect <- function(exp, ..., srcref = NULL) {
     } else {
       signalCondition(exp)
     },
-    continue_test = function(e) NULL
+    continue_test = function(e) NULL,
+    break_test = function(e) break()
   )
 
   invisible(exp)
@@ -115,7 +116,9 @@ expectation_ok <- function(exp) {
 
 
 
-as.expectation <- function(x, ...) UseMethod("as.expectation", x)
+as.expectation <- function(x, ...) {
+  UseMethod("as.expectation", x)
+}
 
 #' @export
 as.expectation.default <- function(x, ..., srcref = NULL) {
@@ -139,14 +142,18 @@ as.expectation.logical <- function(x, message, ..., srcref = NULL, info = NULL) 
 
 #' @export
 as.expectation.error <- function(x, ..., srcref = NULL) {
-  error <- x$message
+  # error <- x$message
 
-  msg <- gsub("Error.*?: ", "", as.character(error))
+  # msg <- gsub("Error.*?: ", "", as.character(error))
 
   # Need to remove trailing newline from error message to be consistent
   # with other messages
-  msg <- gsub("\n$", "", msg)
-
+  # msg <- gsub("\n$", "", msg)
+  msg <- x$message
+  if (!startsWith(msg, 'AutoTestCaseError')){
+    msg = sprintf('Running error: %s\nPlease check your code.', msg)
+    msg = ErrorHandler$msg(msg)
+  }
   expectation("error", msg, srcref)
 }
 
@@ -183,7 +190,7 @@ format.expectation_success <- function(x, ...) {
 
 #' @export
 format.expectation_error <- function(x, ...) {
-  ErrorHandler$msg(x$message)
+  x$message
 }
 
 #' @export

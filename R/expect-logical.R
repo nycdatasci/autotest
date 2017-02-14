@@ -32,9 +32,7 @@ expect_true <- function(object, info = NULL, label = NULL, trace=TRUE) {
   # lab <- make_label(object, label)
   lab <- deparse(substitute(object))
   if (ErrorHandler$trace && trace){
-    pre_msg = sprintf("Testing variable/expression:  %s",
-                      deparse(substitute(object)))
-    ErrorHandler$setTesting(pre_msg)
+    ErrorHandler$setTesting("Testing variable/expression:  %s", lab)
   }
   if (class(object) != 'logical'){
     expect(FALSE,
@@ -44,9 +42,8 @@ expect_true <- function(object, info = NULL, label = NULL, trace=TRUE) {
     expect(
       identical(as.vector(object), rep(TRUE, length(object))),
       ifelse(length(object) == 1,
-             sprintf("Your answer is %s, the type should be TRUE", object),
-             sprintf("All the elements of your answer should be exactly TRUE.")
-      ),
+             sprintf("Your answer is %s, it should be TRUE", object),
+             "All the elements of your answer should be exactly TRUE."),
       info = info
     )
   }
@@ -59,8 +56,7 @@ expect_false <- function(object, info = NULL, label = NULL, trace=TRUE) {
   # lab <- make_label(object, label)
   lab <- deparse(substitute(object))
   if (ErrorHandler$trace && trace){
-    pre_msg = sprintf("Testing variable/expression:  %s", lab)
-    ErrorHandler$setTesting(pre_msg)
+    ErrorHandler$setTesting("Testing variable/expression:  %s", lab)
   }
   if (class(object) != 'logical'){
     expect(FALSE,
@@ -71,8 +67,7 @@ expect_false <- function(object, info = NULL, label = NULL, trace=TRUE) {
       identical(as.vector(object), rep(FALSE, length(object))),
       ifelse(length(object) == 1,
              sprintf("Your answer is %s, it should be FALSE", object),
-             sprintf("All the elements of your answer should be exactly FALSE.")
-             ),
+             "All the elements of your answer should be exactly FALSE."),
       info = info
     )
   }
@@ -84,8 +79,7 @@ expect_false <- function(object, info = NULL, label = NULL, trace=TRUE) {
 expect_na <- function(object, info=NULL, label = NULL, method='all', trace=TRUE){
   lab <- deparse(substitute(object))
   if (ErrorHandler$trace && trace){
-    pre_msg = sprintf("Testing variable/expression:  %s", lab)
-    ErrorHandler$setTesting(pre_msg)
+    ErrorHandler$setTesting("Testing variable/expression:  %s", lab)
   }
   res = ifelse(method == 'all', all(is.na(object)), any(is.na(object)))
   expect(res,

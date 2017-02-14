@@ -20,14 +20,12 @@
 #' }
 expect_match <- function(object, regexp, ..., all = TRUE,
                          info = NULL, label = NULL, trace=TRUE) {
-  if (ErrorHandler$trace && trace){
-    pre_msg = sprintf("Testing variable/expression:  %s",
-                      deparse(substitute(object)))
-    ErrorHandler$setTesting(pre_msg)
-  }
-  stopifnot(is.character(regexp), length(regexp) == 1)
   # label <- make_label(object, label)
   label <- deparse(substitute(object))
+  if (ErrorHandler$trace && trace){
+    ErrorHandler$setTesting("Testing variable/expression:  %s", label)
+  }
+  stopifnot(is.character(regexp), length(regexp) == 1)
 
   stopifnot(is.character(object))
   if (length(object) == 0) {

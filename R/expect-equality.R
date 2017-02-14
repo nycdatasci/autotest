@@ -45,10 +45,9 @@ NULL
 #' @param ... other values passed to [all.equal()]
 expect_equal <- function(object, expected, ..., info = NULL, label = NULL,
                          expected.label = NULL, trace=TRUE) {
+  lab <- deparse(substitute(object))
   if (ErrorHandler$trace && trace){
-    pre_msg = sprintf("Testing variable/expression:  %s",
-                      deparse(substitute(object)))
-    ErrorHandler$setTesting(pre_msg)
+    ErrorHandler$setTesting("Testing variable/expression:  %s", lab)
   }
   comp <- compare(object, expected, ...)
   expect(
