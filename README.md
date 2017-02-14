@@ -22,7 +22,7 @@ The hidden variable `autotest:::ErrorHandler` is a instance of `ErrorHandlerClas
 
 Call Flow:
 
-1. `test_that` -> `test_code` -> `eval(...)` -> `format.expectation_error`.
+1. `test_that` -> `test_code` -> `eval(...)` -> `as.expectation.error`.
 
 This occurs when running code trigger meet some errors. For exmaple, calling `expect_equal(f(1), 2)` without defining the function `f`.
 

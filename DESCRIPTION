@@ -1,5 +1,5 @@
 Package: autotest
-Version: 0.1.0
+Version: 0.1.1
 Title: Unit Testing for R
 Description: A unit testing system designed to be fun, flexible and easy to set
     up.
