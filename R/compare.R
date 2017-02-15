@@ -1,3 +1,14 @@
+mark_type <- function(cls){
+  stopifnot(is.character(cls))
+  if (length(cls) == 1) return(cls)
+  support_types = c('tbl_df', 'data.frame', 'list', 'matrix', 'factor',
+                    'logical', 'integer', 'numeric', 'character')
+  for (i in support_types){
+    if (i %in% cls) return(i)
+  }
+  return(cls[1])
+}
+
 #' Provide human-readable comparison of two objects
 #'
 #' `compare` is similar to [base::all.equal()], but shows
@@ -27,7 +38,7 @@ compare <- function(x, y, ...) {
   if ( is.numeric(x) && is.numeric(y) ){
     UseMethod("compare", y)
   }else if (x_class != y_class &&  !inherits(x, y_class)){
-    msg = sprintf('We expect your answer returns type "%s", but it returns "%s" instead.', y_class, x_class[1])
+    msg = sprintf('We expect your answer returns type "%s", but it returns "%s" instead.', mark_type(y_class), mark_type(x_class))
     if (all(is.null(x))){
       msg = paste(msg,
                   '\nDo you forget to return something in your function definition?',
@@ -271,7 +282,7 @@ compare.data.frame <- function(x, y, ..., tolerance = 1e-5, test.rowname=FALSE, 
   if (test.colname){
     col_diff = setdiff(colnames(y), colnames(x))
     if ( length(col_diff) > 0){
-      msg = sprintf('The columns names of your data.frame are [%s].\nThe column names should be: [%s].\nYou columns do not contain: [%s].',
+      msg = sprintf('The column names of your data.frame are [%s].\nThe column names should be: [%s].\nYou columns do not contain: [%s].',
                     paste(colnames(x), collapse = ','),
                     paste(colnames(y), collapse = ','),
                     paste(col_diff, collapse = ',')
@@ -287,7 +298,7 @@ compare.data.frame <- function(x, y, ..., tolerance = 1e-5, test.rowname=FALSE, 
 
   # test values
   for (col in colnames(y)){
-    res = compare(x[, col], y[, col], ...)
+    res = compare('$'(x, col), '$'(y, col), ...)
     if (!res$equal) {
       msg = sprintf('Testing the column `%s` in your data frame:\n%s',
                     col, res$message)
@@ -319,6 +330,8 @@ compare.data.frame <- function(x, y, ..., tolerance = 1e-5, test.rowname=FALSE, 
   return(comparison())
 }
 
+#' @export
+compare.tbl_df <- compare.data.frame
 
 # Common helpers ---------------------------------------------------------------
 

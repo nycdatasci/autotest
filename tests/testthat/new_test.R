@@ -1,0 +1,436 @@
+#57b73ec8fb03d11000cc7eef------------------------
+library(autotest)
+test_that('test root', {
+  expect_equal(root(1), 1)
+  expect_equal(root(4), 2)
+  expect_equal(root(9), 3)
+
+  # random
+  random_number = abs(rnorm(1))
+  answer = random_number ** 0.5
+  registerPreMsg('In testing root(%s)', random_number)
+  expect_equal(root(random_number), answer, trace=FALSE)
+
+  # negtive
+  negtive_number = -abs(rnorm(1))
+  registerPreMsg('In testing root(%s)', negtive_number)
+  expect_equal(root(negtive_number), NaN, trace=FALSE)
+})
+
+#57bb16213e0f191000e3d07e------------------------
+library(autotest)
+
+correct_answer = 4613732
+test_that("Check answer", {
+	expect_equal(fibonacci_sum, correct_answer, tolerance=1e-15)
+})
+
+#57bcb17acf80521000b06925------------------------
+library(autotest)
+
+test_that("test sub_mpg", {
+    expect_is(sub_mpg, 'tbl_df')
+    expect_equal(sort(colnames(sub_mpg)), paste0("V", 1:4))
+})
+
+correct_avg_mpg = mpg %>% group_by(cyl) %>% summarise(meanCty = mean(cty), meanHwy = mean(hwy))
+test_that("test avg_mpg", {
+    expect_is(avg_mpg, 'tbl_df')
+    expect_equal(avg_mpg, correct_avg_mpg)
+})
+
+correct_top_manufacturer = mpg %>% group_by(manufacturer) %>% summarise(max_cty=max(cty)) %>% arrange(desc(max_cty))
+
+test_that("test top_manufacturer", {
+    expect_is(top_manufacturer, 'tbl_df')
+    expect_equal(top_manufacturer, correct_top_manufacturer)
+})
+
+#57bc96afdd426f1000e043cb------------------------
+library(autotest)
+test_that('test paste_chars',{
+  expect_equal(paste_chars(c("a", "b")), c("aa", "ab", "ba", "bb"))
+  expect_equal(paste_chars(c("a", "b", "c")), c("aa", "ab", "ac", "ba", "bb", "bc", "ca", "cb", "cc"))
+  expect_equal(paste_chars(c("1", "2")), c("11", "12", "21", "22"))
+  random_char_vec = sample(LETTERS, 5)
+  correct_ans = c(sapply(random_char_vec, paste0, random_char_vec))
+  registerPreMsg("Testing paste_chars(c('%s')): ",
+                 paste0(random_char_vec, collapse = "', '"))
+  expect_equal(paste_chars(random_char_vec), correct_ans, trace = FALSE)
+})
+
+#57d8178bc354b10010faec1b------------------------
+library(autotest)
+test_that("test Pet", {
+  expect_equal(Pet, list(species=c('dog', 'cat', 'dog'),
+                         weight=c(20,10,40)))
+})
+
+#57c8583549232d10002822a8------------------------
+library(autotest)
+test_that('', {
+  expect_is(p, 'ggplot')
+  registerPreMsg('Testing the x axis of your plot:')
+  registerPostMsg('Did you map the `points` column on the x axis?')
+  expect_equal(unlist(p)$labels.x, 'points')
+  registerPreMsg('Testing whether you use the `facet` layer:')
+  registerPostMsg('Did you add the facet layer in your plot?')
+  expect_false(identical(p$facet, facet_null()))
+})
+
+#57c75e634c9d531000dec55b------------------------
+library(autotest)
+test_that("test season_win_ratio", {
+  expect_is(season_win_ratio, 'tbl_df')
+  answer = group_by(knicks, season) %>% summarise(ratio=mean(win=="W"))
+  expect_equal(season_win_ratio, answer)
+})
+
+test_that('test season_win_bar', {
+  expect_is(season_win_bar, 'ggplot')
+  expect_true(unlist(season_win_bar)$labels.x == 'season')
+  expect_true(unlist(season_win_bar)$labels.y == 'ratio')
+  expect_is(layer_grob(season_win_bar)[[1]], 'rect')
+})
+
+test_that("test visit_win_ratio", {
+  expect_is(visit_win_ratio, 'tbl_df')
+  answer = group_by(knicks, season, visiting) %>% summarise(ratio=mean(win=="W"))
+  expect_equal(visit_win_ratio, answer)
+})
+
+test_that('test visit_win_bar', {
+  expect_is(visit_win_bar, 'ggplot')
+  expect_true(unlist(visit_win_bar)$labels.x == 'season')
+  expect_true(unlist(visit_win_bar)$labels.y == 'ratio')
+  expect_is(layer_grob(visit_win_bar)[[1]], 'rect')
+})
+
+
+#57c75e424c9d531000dec55a------------------------
+library(autotest)
+test_that("test faithful$length", {
+  answer = ifelse(faithful$eruption < 3.2, 'short', 'long')
+  expect_equal(faithful$length, answer)
+})
+
+test_that("test boxplot", {
+  expect_is(p_box, 'ggplot')
+  expect_true("length" %in% unlist(p_box)$labels.x)
+  expect_true("waiting" %in% unlist(p_box)$labels.y)
+  expect_match(layer_grob(p_box)[[1]]$name, "geom_boxplot")
+})
+
+test_that("test density plot", {
+  expect_is(p_density, 'ggplot')
+  expect_true("waiting" %in% unlist(p_density)$labels.x)
+  expect_equal(unlist(p_density)$labels.y, 'density')
+  expect_match(layer_grob(p_density)[[1]]$name, "geom_density")
+})
+
+#57bcbe1fe1fd8210008274cb------------------------
+library(autotest)
+test_that("test new variables ratioHVE and ratioCVE", {
+  ratioHVE = mpg$hwy / mpg$displ
+  ratioCVE = mpg$cty / mpg$displ
+  expect_is(mpg, 'tbl_df')
+  expect_true('ratioHVE' %in% colnames(mpg))
+  expect_true('ratioCVE' %in% colnames(mpg))
+  expect_equal(mpg$ratioHVE, ratioHVE)
+  expect_equal(mpg$ratioCVE, ratioCVE)
+})
+
+correct_avg_mpg = mpg %>% group_by(year, manufacturer) %>% summarise(avg_ratioHVE = mean(ratioHVE), avg_ratioCVE = mean(ratioCVE))
+
+test_that("test average ratioHVE and ratioCVE", {
+  expect_is(avg_mpg, 'tbl_df')
+  expect_equal(avg_mpg, correct_avg_mpg)
+})
+correct_big_ratioHVE = mpg %>% group_by(year, drv) %>% summarise(max_ratioHVE = max(ratioHVE))
+
+test_that("test the biggest ratioHVE", {
+  expect_is(big_ratioHVE, 'tbl_df')
+  expect_equal(big_ratioHVE, correct_big_ratioHVE)
+})
+
+
+#57c5d5d8055886100005d681------------------------
+library(autotest)
+nyc_job = read.csv('/data/NYC_Jobs.csv', stringsAsFactors=FALSE)
+tmp = as.numeric(plyr::mapvalues(nyc_job$Salary.Frequency, c('Annual', 'Daily', 'Hourly'), c(1, 260, 2080)))
+correct_answer = nyc_job %>% mutate(annual_salary_from = tmp * Salary.Range.From,
+                                    annual_salary_to = tmp * Salary.Range.To) %>%
+  group_by(Agency) %>%
+  summarise(mean_salary_from = mean(annual_salary_from),
+            median_salary_from = median(annual_salary_from),
+            mean_salary_to = mean(annual_salary_to),
+            median_salary_to = median(annual_salary_to))
+
+test_that("test salary_summary", {
+  expect_is(salary_summary, 'tbl_df')
+  expect_equal(salary_summary, correct_answer)
+})
+
+test_that("test agency_best", {
+  answer = correct_answer %>% arrange(-mean_salary_from) %>% .[[1, 'Agency']]
+  if (is.factor(agency_best)){
+    registerPostMsg('Set `stringsAsFactors=FALSE` in the `read.csv` function.')
+  }
+  expect_equal(agency_best, answer)
+})
+
+
+#57c705a7d46fd5100032d743------------------------
+library(autotest)
+test_that("test salary_summary", {
+  expect_is(posting_diff, 'tbl_df')
+  answer = data.frame(avg_salary_range=c(29137.45, 28073.55),
+                      Posting.Type=c('External', 'Internal'),
+                      sd_salary_range=c('27288.91', '26649.87'))
+  expect_equal(posting_diff, answer, tolerance=0.01)
+})
+
+test_that("test agency_best", {
+  expect_is(level_range, 'tbl_df')
+  answer = data.frame(Level=c("M6", "M5", "M7", "M3", "M2", "M1", "M4", "4B", "04", "4A", "00", "03", "3A", "1B", "02", "01"),
+                      avg_salary_range=c(93224.143,84087.125,78819.25,76280.855,68189.966,61278.701,57034.303,37239,30083.386,23860.667,22723.568,21595.282,20393,19482,17944.088,16113.675))
+  expect_equal(level_range, answer)
+})
+
+#57c705bfd46fd5100032d744------------------------
+library(autotest)
+yearly = function(frequency) {
+  ifelse(frequency == 'Hourly', 2080, ifelse(frequency == 'Daily', 260, 1))
+}
+correct_salary_range_total = nyc_job %>% mutate(range = X..Of.Positions*(Salary.Range.To - Salary.Range.From) * yearly(Salary.Frequency)) %>%
+  group_by(Agency) %>%
+  summarise(salary_range_total=max(range) - min(range))
+
+test_that("test agency_spent", {
+  expect_is(agency_spent, 'tbl_df')
+  expect_equal(agency_spent, correct_salary_range_total)
+})
+
+test_that("test civil_range", {
+  expect_is(civil_range, 'tbl_df')
+  answer = data.frame(
+    Civil.Service.Title= 'COMPUTER SYSTEMS MANAGER',
+    max_salary_range = 121852
+  )
+  expect_equal(civil_range, answer)
+})
+
+
+#5816b866aefb2a0ef1ec80de------------------------
+library(autotest)
+test_that("test days", {
+  answer = factor(c("Friday", "Sunday", "Monday", "Sunday", "Wednesday"),
+                 levels=c("Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"),
+                 ordered=T)
+  expect_equal(days, answer)
+})
+
+
+#58071ba56ea2580010fcf88f------------------------
+library(autotest)
+test_that("test Pet", {
+  answer = data.frame(species=c('dog', 'cat', 'dog'), weight=c(20,10,40))
+  expect_equal(Pet, answer)
+})
+
+#58198202705163001070f640------------------------
+library(autotest)
+test_that("test girls_90", {
+  birth = read.csv('/data/births.csv', stringsAsFactors=FALSE)
+  answer = dplyr::filter(birth, sex=='girl', year >= 1990, year <= 2000) # fill your code here
+  expect_equal(girls_90, answer)
+})
+
+#58199b8a705163001070f643------------------------
+library(autotest)
+test_that("test births", {
+  BIRTHSBIRTHS = read.csv('/data/births.csv', stringsAsFactors = FALSE)
+  BIRTHSBIRTHS = reshape2::dcast(BIRTHSBIRTHS, year ~ sex, value.var="births")
+  answer = mutate(BIRTHSBIRTHS, ratio = boy / girl)
+  expect_equal(births, answer)
+})
+
+
+#581b0f2dda356d001055defe------------------------
+library(autotest)
+test_that("test p_scatterplot", {
+  expect_is(p_scatterplot, 'ggplot')
+  registerPostMsg('Did you map the `speed` column on the x axis?')
+  expect_true(unlist(p_scatterplot)$labels.x == 'speed')
+  registerPostMsg('Did you map the `dist` column on the y axis?')
+  expect_true(unlist(p_scatterplot)$labels.y == 'dist')
+  registerPostMsg('Did you add a point layer?')
+  expect_is(layer_grob(p_scatterplot)[[1]], 'points')
+})
+
+
+#581b1024da356d001055deff------------------------
+library(autotest)
+test_that("test p", {
+  expect_is(p, 'ggplot')
+  registerPostMsg('Did you set the label on x axis to "Speed (mph)"?')
+  expect_true(unlist(p)$labels.x == 'Speed (mph)')
+
+  registerPostMsg('Did you set the label on y axis to "Stopping Distance (ft)"?')
+  expect_true(unlist(p)$labels.y == 'Stopping Distance (ft)')
+
+  registerPostMsg('Did you set the title to "Scatterplot of Speed/Distance"?')
+  expect_true(unlist(p)$labels.title == 'Scatterplot of Speed/Distance')
+})
+
+#581b1112da356d001055df00------------------------
+library(autotest)
+test_that("test p", {
+  expect_is(p, 'ggplot')
+  registerPostMsg('Did you change the point style by setting the `pch` argument?')
+  expect_true(all(layer_grob(p)[[1]]$pch == 17))
+})
+
+
+
+#581c3a1b2aabbf6d2d23e2cc------------------------
+library(autotest)
+test_that("test diamonds_best", {
+  expect_is(diamonds_best, 'tbl')
+  expect_equal(nrow(diamonds_best), 73)
+  expect_true(diamonds_best$clarity == 'IF')
+  expect_true(diamonds_best$color == 'D')
+})
+
+test_that("test diamonds_price", {
+  expect_is(diamonds_price, 'tbl')
+  expect_equal(nrow(diamonds_price), 5)
+  expect_equal(sort(diamonds_price$avg_price), c(4208,9034,10099,10877,11347), tolerance=1)
+})
+
+test_that("test diamonds_bar", {
+  expect_is(diamonds_bar, 'ggplot')
+  registerPostMsg('Did you map the `cut` column on the x axis?')
+  expect_true(unlist(diamonds_bar)$labels.x == 'cut')
+  registerPostMsg('Did you map the `avg_price` column on the y axis?')
+  expect_true(unlist(diamonds_bar)$labels.y == 'avg_price')
+  registerPostMsg('Are you making a bar plot?')
+  expect_is(unlist(diamonds_bar)$layer$geom, 'GeomBar')
+})
+
+
+#581ffaea777561001075d40a------------------------
+library(autotest)
+test_that('',{
+  registerPostMsg('Did you set the label on the x axis?')
+  expect_equal(unlist(p)$labels.x, 'City miles per gallon')
+  registerPostMsg('Did you set the label on the y axis?')
+  expect_equal(unlist(p)$labels.y, 'Highway miles per gallon')
+})
+
+
+#58200148777561001075d40d------------------------
+library(autotest)
+test_that('', {
+  registerPostMsg('Did you save your plot to the file `result.png`?')
+  expect_true(file.exists('result.png'))
+  if (file.exists('result.png')) file.remove('result.png')
+})
+
+
+#582446a87b4aab00136be0c4------------------------
+library(autotest)
+test_that('test model',{
+  expect_is(model, 'lm')
+  model$coefficients = model$coefficients[order(names(model$coefficients))]
+  registerPreMsg('Testing the predictors you are using:')
+  expect_equal(names(model$coefficients), c("(Intercept)", "Newspaper", "Radio", "TV"))
+  registerPreMsg('Testing the number of observations you are using:')
+  expect_equal(length(model$residuals), 200)
+})
+
+
+#582b41410f12320013935848------------------------
+library(autotest)
+test_that("Regress heart weight onto body weight", {
+  expect_equal(coefficients, lm(Hwt ~ Bwt, data = cats)$coefficients, tolerance = .01)
+})
+
+
+#582b94eacb6dc500134c3cee------------------------
+library(autotest)
+model_soln = lm(Hwt ~ Bwt, data = cats)
+bc_soln = boxcox(model_soln, plotit = FALSE)
+test_that("The best value of lambda", {
+  expect_equal(lambda, bc_soln$x[bc_soln$y == max(bc_soln$y)], tolerance = .01)
+})
+
+
+#583551cee3898e00133ddbef------------------------
+library(autotest)
+answer = glm(survived ~ as.factor(pclass) + sex + age, data = titanic, family='binomial')
+coefficients = sort(as.numeric(answer$coefficients))
+
+test_that("lr_model", {
+  expect_is(lr_model, 'glm')
+  registerPreMsg('Testing the link function you are using:')
+  expect_equal(lr_model$family$family, 'binomial')
+
+  registerPreMsg('Testing the number of predictors:')
+  expect_length(lr_model$coefficient, 5)
+
+  registerPreMsg('Testing the coefficients:')
+  expect_equal(sort(as.numeric(lr_model$coefficient)), coefficients)
+
+  registerPreMsg('Testing the predictions:')
+  expect_equal(lr_model$y, answer$y)
+})
+
+
+#58355fdfe3898e00133ddbf1------------------------
+library(autotest)
+
+test_that("test lr_model", {
+  expect_is(lr_model, 'glm')
+  expect_equal(lr_model$family$family, 'binomial')
+})
+predictions = as.numeric(predict(lr_model, test, type='response') > 0.5)
+true_survived = as.numeric(readLines('/data/t11.23'))
+accuracy = mean(predictions==true_survived, na.rm=T)
+sprintf('The accuracy of your accuracy is: %.2f%%', accuracy * 100)
+test_that("test predictions", {
+  registerPreMsg('Is your accurancy greater than 75%%?')
+  expect_true(mean(predictions==true_survived, na.rm=T) > 0.75, trace = F)
+})
+
+if (accuracy > 0.75){
+  test_that("test predictions", {
+    registerPreMsg('Is your accurancy greater than 78%%?')
+    expect_true(mean(predictions==true_survived, na.rm=T) > 0.78, trace=F)
+  })
+  if (accuracy > 0.78) {
+    test_that("test predictions", {
+      registerPreMsg('Is your accurancy greater than 80%%?')
+      expect_true(mean(predictions==true_survived, na.rm=T) > 0.80, trace=F)
+    })
+  }
+}
+
+#583c8052cacb9c0013d4c98d------------------------
+library(autotest)
+test_that("test accuracy", {
+  expect_equal(accuracy, 0.96667)
+})
+
+#583dbf7f502acf00131240c8------------------------
+library(autotest)
+test_that("test lhs setitem", {
+  setitem = as.character(setitem)
+  expect_equal(setitem, "{Class=2nd,Sex=Female}")
+})
+
+test_that("test support", {
+  expect_equal(support, 0.04225352)
+})
+
+

@@ -37,6 +37,7 @@ expect <- function(exp, ..., srcref = NULL) {
       exp$message <- ErrorHandler$msg(exp$message)  # add hooked error message
       stop(exp)
     } else {
+      ErrorHandler$testing <- NULL  # reset testing obj if it is OK
       signalCondition(exp)
     },
     continue_test = function(e) NULL,
