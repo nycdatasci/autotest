@@ -1,4 +1,7 @@
-tryCatch(source('error.R'), error = function() source('tests/testthat/error.R'))
+tryCatch(source('error.R'),
+         error = function(e) source('tests/testthat/error.R'),
+         warning = function(e) invisible()
+         )
 
 library(autotest)
 error_code = c()

@@ -1,21 +1,14 @@
-library(autotest)
-library(jsonlite)
 # check error submissions
-tryCatch(
-  rex <- fromJSON(readLines('tests/testthat/rsubmission.json')),
-  error = function(e) rex <<- fromJSON(readLines('rsubmission.json')),
-  finally = {rex <<- unique(rex)}
-)
+library(autotest)
 
 edit_code <- function(x){
   x = gsub('testthat', 'autotest', x)
   gsub('expect_identical', 'expect_equal', x)
 }
 
-
 run_test <- function(df, start=1){
   stopifnot(start < nrow(df))
-  new_code <- readLines('tests/testthat/new_test.R')
+  new_code <- readLines('tests/testthat/new_test.txt')
   split_index = grep('#[0-9a-z]{24}', new_code)
   fetch_new_test = function(id){
     target_index = grep(paste('#', id, sep=''), new_code)
@@ -76,8 +69,17 @@ run_test <- function(df, start=1){
   }
 }
 
+run_main <- function(){
+  withCallingHandlers(
+    rex <<- jsonlite::fromJSON(readLines('tests/testthat/rsubmission.json')),
+    error = function(e) rex <<- jsonlite::fromJSON(readLines('rsubmission.json')),
+    warning = function(e) invisible()
+  )
+  rex <<- unique(rex)
+  # run_test(rex, 2088)
+  # library(dplyr)
+  # sample_res <- rex %>% group_by(id) %>% do(sample_n(., min(10, nrow(.))))
+  # run_test(sample_res, 460)
+}
 
-# run_test(rex, 2088)
-# sample_res <- rex %>% group_by(id) %>% do(sample_n(., min(10, nrow(.))))
-# run_test(sample_res, 460)
-
+# run_main()

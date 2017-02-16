@@ -3,9 +3,9 @@ error_test <- function(error_code_vec){
   handle_msg = function(e) {
     mid_count <<- count + 1
     if (!startsWith(e$message, 'AutoTestCaseError')) {
-      msg = sprintf('Here is the code: %s\n', code)
+      message('Here is the code:')
       cat('Unexpect error: ', e$message, '\n')
-      stop(msg, call. = FALSE)
+      stop(code, call. = FALSE)
     }
     cat(paste(rep('-', 30), collapse = ''), '\n')
     # cat(code, '\n\n')

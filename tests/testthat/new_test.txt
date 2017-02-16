@@ -432,5 +432,3 @@ test_that("test lhs setitem", {
 test_that("test support", {
   expect_equal(support, 0.04225352)
 })
-
-

@@ -31,3 +31,4 @@ error_test <- function(error_code_vec){
 }
 
 testthat::test_check("autotest")
+
