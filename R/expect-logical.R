@@ -28,62 +28,65 @@ NULL
 
 #' @export
 #' @rdname logical-expectations
-expect_true <- function(object, info = NULL, label = NULL, trace=TRUE) {
-  # lab <- make_label(object, label)
+expect_true <- function(object, info = NULL, label = NULL,
+                        trace=TRUE, suppressErr=FALSE) {
   lab <- deparse(substitute(object))
   if (ErrorHandler$trace && trace){
     ErrorHandler$setTesting("Testing variable/expression:  %s", lab)
   }
   if (class(object) != 'logical'){
-    expect(FALSE,
-           sprintf("The type of your answer is %s, the type should be logical", class(object)),
-           info = info)
+    msg = sprintf("The type of your answer is %s, the type should be logical", class(object))
+    is_expect = FALSE
   }else{
-    expect(
-      identical(as.vector(object), rep(TRUE, length(object))),
-      ifelse(length(object) == 1,
-             sprintf("Your answer is %s, it should be TRUE", object),
-             "All the elements of your answer should be exactly TRUE."),
-      info = info
-    )
+    is_expect = identical(as.vector(object), rep(TRUE, length(object)))
+    msg = ifelse(length(object) == 1,
+                 sprintf("Your answer is %s, it should be TRUE", object),
+                 "All the elements of your answer should be exactly TRUE.")
   }
+  expect(
+    is_expect,
+    ifelse(suppressErr, '', msg),
+    info = info
+  )
   invisible(object)
 }
 
 #' @export
 #' @rdname logical-expectations
-expect_false <- function(object, info = NULL, label = NULL, trace=TRUE) {
-  # lab <- make_label(object, label)
+expect_false <- function(object, info = NULL, label = NULL,
+                         trace=TRUE, suppressErr=FALSE) {
   lab <- deparse(substitute(object))
   if (ErrorHandler$trace && trace){
     ErrorHandler$setTesting("Testing variable/expression:  %s", lab)
   }
   if (class(object) != 'logical'){
-    expect(FALSE,
-           sprintf("The type of your answer is %s, it should be logical", class(object)),
-            info = info)
+    is_expect = FALSE
+    msg = sprintf("The type of your answer is %s, it should be logical", class(object))
+
   }else{
-    expect(
-      identical(as.vector(object), rep(FALSE, length(object))),
-      ifelse(length(object) == 1,
-             sprintf("Your answer is %s, it should be FALSE", object),
-             "All the elements of your answer should be exactly FALSE."),
-      info = info
-    )
+    is_expect = identical(as.vector(object), rep(FALSE, length(object)))
+    msg = ifelse(length(object) == 1,
+                 sprintf("Your answer is %s, it should be FALSE", object),
+                 "All the elements of your answer should be exactly FALSE.")
   }
+  expect(is_expect,
+         ifelse(suppressErr, '', msg),
+         info = info)
   invisible(object)
 }
 
 #' @export
 #' @rdname logical-expectations
-expect_na <- function(object, info=NULL, label = NULL, method='all', trace=TRUE){
+expect_na <- function(object, info=NULL, label = NULL, method='all',
+                      trace=TRUE, suppressErr=FALSE){
   lab <- deparse(substitute(object))
   if (ErrorHandler$trace && trace){
     ErrorHandler$setTesting("Testing variable/expression:  %s", lab)
   }
   res = ifelse(method == 'all', all(is.na(object)), any(is.na(object)))
+  msg = sprintf('We expect your answer to be NA, however it is/are not')
   expect(res,
-         sprintf('We expect your answer to be NA, however it is/are not'),
+         ifelse(suppressErr, '', msg),
          info=info)
   invisible(object)
 }

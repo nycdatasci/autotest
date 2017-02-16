@@ -226,7 +226,7 @@ compare.list <- function(x, y, ..., test.names = TRUE){
   for (i in seq_along(x)){
     res = compare(x[[i]], y[[i]], ...)
     if (!res$equal) {
-      msg = sprintf('The type of the %dth element%s in your list is `%s`.\nIn testing the %dth element:\n%s',
+      msg = sprintf('The type of the %dth element in your list is `%s`.\nIn testing the %dth element:\n%s',
                     i, class(x[[i]]), i, res$message)
       return(comparison(FALSE, msg))
     }

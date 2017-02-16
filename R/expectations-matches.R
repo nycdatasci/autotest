@@ -19,8 +19,9 @@
 #' expect_match(character(), ".")
 #' }
 expect_match <- function(object, regexp, ..., all = TRUE,
-                         info = NULL, label = NULL, trace=TRUE) {
-  # label <- make_label(object, label)
+                         info = NULL, label = NULL,
+                         trace=TRUE, suppressErr=FALSE) {
+
   label <- deparse(substitute(object))
   if (ErrorHandler$trace && trace){
     ErrorHandler$setTesting("Testing variable/expression:  %s", label)
@@ -40,13 +41,14 @@ expect_match <- function(object, regexp, ..., all = TRUE,
   #   values <- paste0("Actual values:\n",
   #     paste0("* ", escape_regex(encodeString(object)), collapse = "\n"))
   # }
+  msg = sprintf(
+    "%s does not match %s.",
+    label, # escape_regex(label),
+    encodeString(regexp, quote = '"')
+  )
   expect(
     if (all) all(matches) else any(matches),
-    sprintf(
-      "%s does not match %s.",
-      label, # escape_regex(label),
-      encodeString(regexp, quote = '"')
-    ),
+    ifelse(suppressErr, '', msg),
     info = info
   )
   invisible(object)

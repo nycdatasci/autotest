@@ -86,7 +86,8 @@ NULL
 #' @export
 #' @rdname output-expectations
 expect_output <- function(object, regexp = NULL, ...,
-                          info = NULL, label = NULL, trace=TRUE) {
+                          info = NULL, label = NULL,
+                          trace=TRUE, suppressErr=FALSE) {
 
   # lab <- make_label(object, label)
   lab <- deparse(substitute(object))
@@ -96,24 +97,26 @@ expect_output <- function(object, regexp = NULL, ...,
   output <- capture_output(object)
 
   if (identical(regexp, NA)) {
+    msg = sprintf("%s produced output:\n%s", lab, encodeString(output))
     expect(
       identical(output, ""),
-      sprintf("%s produced output:\n%s", lab, encodeString(output)),
+      ifelse(suppressErr, '', msg),
       info = info
     )
   } else if (is.null(regexp) || identical(output, "")) {
     expect(
       !identical(output, ""),
-      sprintf("%s produced no output", lab),
+      ifelse(suppressErr, '', sprintf("%s produced no output", lab)),
       info = info
     )
   } else {
+    msg = sprintf("%s produced output: %s. \nThe output shoud match: %s",
+                  lab,
+                  encodeString(output, quote = '"'),
+                  encodeString(regexp, quote = '"'))
     expect(
       all(grepl(regexp, output, ...)),
-      sprintf("%s produced output: %s. \nThe output shoud match: %s",
-              lab,
-              encodeString(output, quote = '"'),
-              encodeString(regexp, quote = '"')),
+      ifelse(suppressErr, '', msg),
       info = info
     )
   }
@@ -154,7 +157,7 @@ expect_output_file <- function(object, file, update = FALSE, ...,
 #' @export
 #' @rdname output-expectations
 expect_error <- function(object, regexp = NULL, class = NULL, ..., info = NULL,
-                         label = NULL, trace=TRUE) {
+                         label = NULL, trace=TRUE, suppressErr=FALSE) {
   # lab <- make_label(object, label)
   lab <- deparse(substitute(object))
   if (ErrorHandler$trace && trace){
@@ -177,28 +180,33 @@ expect_error <- function(object, regexp = NULL, class = NULL, ..., info = NULL,
   if (!is.null(class)) {
     expect(
       inherits(error, class),
-      sprintf("The expression %s did not throw an error of class '%s'.", lab, class),
+      ifelse(suppressErr, '',
+        sprintf("The expression %s did not throw an error of class '%s'.", lab, class)),
       info = info
     )
   } else if (identical(regexp, NA)) {
     expect(
       is.null(error),
-      sprintf("The expression %s threw an error:\n%s", lab, error$message),
+      ifelse(suppressErr, '',
+        sprintf("The expression %s threw an error:\n%s", lab, error$message)),
       info = info
     )
   } else if (is.null(regexp) || is.null(error)) {
     expect(
       !is.null(error),
-      sprintf("The expression %s should throw an error, however it did not.", lab),
+      ifelse(suppressErr, '',
+        sprintf("The expression %s should throw an error, however it did not.", lab)),
       info = info
     )
   } else {
     expect(
       all(grepl(regexp, error$message, ...)),
-      sprintf("The expression %s throw an error: %s. \nThe error message shoud match: %s",
+      ifelse(suppressErr, '',
+        sprintf("The expression %s throw an error: %s. \nThe error message shoud match: %s",
               lab,
               encodeString(error$message, quote = '"'),
-              encodeString(regexp, quote = '"')),
+              encodeString(regexp, quote = '"'))
+        ),
       info = info
     )
   }

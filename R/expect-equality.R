@@ -44,7 +44,7 @@ NULL
 #' @rdname equality-expectations
 #' @param ... other values passed to [all.equal()]
 expect_equal <- function(object, expected, ..., info = NULL, label = NULL,
-                         expected.label = NULL, trace=TRUE) {
+                         expected.label = NULL, trace=TRUE, suppressErr=FALSE) {
   lab <- deparse(substitute(object))
   if (ErrorHandler$trace && trace){
     ErrorHandler$setTesting("Testing variable/expression:  %s", lab)
@@ -52,55 +52,9 @@ expect_equal <- function(object, expected, ..., info = NULL, label = NULL,
   comp <- compare(object, expected, ...)
   expect(
     comp$equal,
-    # sprintf("%s not equal to %s.\n%s", lab_act, lab_exp, comp$message),
-    comp$message,
+    ifelse(suppressErr, '', comp$message),
     info = info
   )
 
   invisible(object)
 }
-
-#' #' @export
-#' #' @rdname equality-expectations
-#' expect_equivalent <- function(object, expected, ..., info = NULL, label = NULL,
-#'                               expected.label = NULL) {
-#'   lab_act <- make_label(object, label)
-#'   lab_exp <- make_label(expected, expected.label)
-#'
-#'   comp <- compare(object, expected, ..., check.attributes = FALSE)
-#'   expect(
-#'     comp$equal,
-#'     sprintf("%s not equivalent to %s.\n%s", lab_act, lab_exp, comp$message),
-#'     info = info
-#'   )
-#'   invisible(object)
-#' }
-
-#' #' @export
-#' #' @rdname equality-expectations
-#' expect_identical <- function(object, expected, info = NULL, label = NULL,
-#'                              expected.label = NULL) {
-#'
-#'   lab_act <- make_label(object, label)
-#'   lab_exp <- make_label(expected, expected.label)
-#'
-#'   ident <- identical(object, expected)
-#'   if (ident) {
-#'     msg <- ""
-#'   } else {
-#'     compare <- compare(object, expected)
-#'     if (compare$equal) {
-#'       msg <- "Objects equal but not identical"
-#'     } else {
-#'       msg <- compare$message
-#'     }
-#'   }
-#'
-#'   expect(
-#'     ident,
-#'     sprintf("%s not identical to %s.\n%s", lab_act, lab_exp, msg),
-#'     info = info
-#'   )
-#'   invisible(object)
-#' }
-

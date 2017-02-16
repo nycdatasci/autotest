@@ -29,7 +29,8 @@ NULL
 #' @param type String giving base type (as returned by [typeof()]).
 #' @export
 #' @rdname inheritance-expectations
-expect_is <- function(object, class, info = NULL, label = NULL, trace=TRUE) {
+expect_is <- function(object, class, info = NULL, label = NULL,
+                      trace=TRUE, suppressErr=FALSE) {
   # lab <- make_label(object, label)
   lab <- deparse(substitute(object))
   stopifnot(is.character(class))
@@ -39,10 +40,11 @@ expect_is <- function(object, class, info = NULL, label = NULL, trace=TRUE) {
 
   act <- klass(object)
   exp <- paste(class, collapse = "/")
-
+  msg = ifelse(suppressErr, '', sprintf(
+    "%s is a/an `%s` object, it should be a `%s` object.", lab, act, exp))
   expect(
     inherits(object, class),
-    sprintf("%s is a/an `%s` object, it should be a `%s` object.", lab, act, exp),
+    msg,
     info = info
   )
   invisible(object)

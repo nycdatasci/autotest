@@ -92,7 +92,7 @@ ErrorHandlerClass <- R6::R6Class("ErrorMessage",
        msg_vector = c('AutoTestCaseError:',
                       ifelse(self$trace, self$getTesting(), ''),
                       self$getPreMsg(), error_message, self$getPostMsg())
-       msg_vector = Filter(function(x) x != '' && !is.null(x), msg_vector)
+       msg_vector = Filter(function(x) trimws(x) != '' && !is.null(x), msg_vector)
        res = paste(msg_vector, collapse = "\n")
        return(res)
      }
