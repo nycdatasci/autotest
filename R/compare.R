@@ -298,40 +298,23 @@ compare.data.frame <- function(x, y, ..., tolerance = 1e-5, test.rowname=FALSE, 
 
   # test values
   for (col in colnames(y)){
-    res = compare('$'(x, col), '$'(y, col), ...)
+    res = compare(x[[col]], y[[col]], tolerance=tolerance, ...)
     if (!res$equal) {
       msg = sprintf('Testing the column `%s` in your data frame:\n%s',
                     col, res$message)
       return(comparison(FALSE, msg))
     }
-    # # test class of column
-    # x_class = class(x[, col]); y_class = class(y[, col])
-    # is_col_numeric = is.numeric(x) && is.numeric(y)
-    # if (x_class != y_class & !is_col_numeric){
-    #   msg = sprintf('The data type of the column "%s" in your data.frame is %s, which should be %s',
-    #                 col, x_class, y_class)
-    #   return(comparison(FALSE, msg))
-    # }
-    #
-    # # test value of column
-    # if (y_class == 'numeric'){
-    #   col_val_diff = abs(x[[col]] - y[[col]]) <= tolerance | x[[col]] == y[[col]]
-    # }else{
-    #   col_val_diff = x[[col]] == y[[col]]
-    # }
-    # if (!all(col_val_diff)){
-    #   index = which(!col_val_diff)[1]
-    #   msg = sprintf('The %ith row, "%s" column of your data.frame is %s, which is not equal to the correct answer %s',
-    #                 index, col, x[index, col], y[index, col])
-    #   return(comparison(FALSE, msg))
-    # }
   }
 
   return(comparison())
 }
 
 #' @export
-compare.tbl_df <- compare.data.frame
+compare.tbl_df <- function(x, y, ...){
+  x = as.data.frame(x)
+  y = as.data.frame(y)
+  compare.data.frame(x, y, ...)
+}
 
 # Common helpers ---------------------------------------------------------------
 

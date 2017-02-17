@@ -59,9 +59,11 @@ run_test <- function(){
   }
   for (i in 1:nrow(rex)){
     row_code = rex[i, ]
-    new_test = fetch_new_test(row_code$id)
-    if (!is.null(new_test)){
-      row_code$test_code = new_test
+    if (!grep('autotest', row_code$test_code)) {
+      new_test = fetch_new_test(row_code$id)
+      if (!is.null(new_test)){
+        row_code$test_code = new_test
+      }
     }
     code = paste(row_code$pre_code, row_code$ans_code, row_code$test_code, sep='\n')
     code = edit_code(code)
