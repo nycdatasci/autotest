@@ -1,0 +1,619 @@
+---
+title: "autotest with R"
+subtitle: ""
+author: "Yalei Du"
+date: '`r Sys.Date()`'
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+```
+
+# autotest
+
+- Repo: [https://github.com/casunlight/autotest](https://github.com/casunlight/autotest)
+
+- Document: [http://autotest-docs.readthedocs.io/](http://autotest-docs.readthedocs.io/en/latest/R/index.html)
+
+## Goal
+
+1. Few test code 
+
+1. Human reable error message 
+
+
+---
+# Installation
+
+```bash
+git clone https://github.com/casunlight/autotest.git
+R CMD INSTALL autotest  # You may need to add the `sudo` prefix
+```
+
+
+---
+# Guideline
+
+- Baisc example
+
+- Default error message 
+
+- Automatic tracing
+
+- Customize error message
+
+
+---
+
+# Baisc Example
+
+```{r, eval=FALSE}
+# submissions
+x = 1
+y = 2
+
+# test code
+library(autotest)
+test_that('test x', {
+  expect_equal(x, 1)
+})
+test_that('test y', {
+  expect_equal(y, 1)
+})
+```
+
+Mainly use the `test_that` and the `expect_equal` functions.
+
+---
+
+# Baisc Example
+
+A `test_that` function call is a test block. It may contains multiple
+expectations(represented as an `expect_equal` function call). 
+
+Example:
+
+```r
+x = c(1, 2)
+test_that('test x', {
+  expect_equal(x[1], 1)
+  expect_equal(x[2], 2)
+})
+```
+
+However, you can simplified to a single expectation in this case: 
+
+```r
+test_that('test x', {
+  expect_equal(x, c(1, 2))
+})
+```
+
+
+---
+class: center, inverse, middle
+
+# Default error message 
+
+### The default error message<sup>[1]</sup> is good enough
+
+### **No need** extra settings
+
+.footnote[
+[1]: [Error Cases](http://autotest-docs.readthedocs.io/en/latest/R/4-example.html)
+]
+
+---
+# Default error message 
+
+- Variable Not Found
+
+
+```r
+library(autotest)
+test_that('', {
+  expect_equal(x, 1)
+})
+## AutoTestCaseError:
+## Testing variable/expression:  x
+## object 'x' not found
+```
+
+---
+
+# Default error message 
+
+- Variable Not Found
+
+
+```r
+library(autotest)
+test_that('', {
+  expect_equal(x, 1)
+})
+## AutoTestCaseError:
+## Testing variable/expression:  x
+## object 'x' not found
+```
+
+---
+
+# Default error message 
+
+- Function Not Found
+
+```r
+f <- 1
+test_that('',{
+  expect_equal(f(1), 1)
+})
+## AutoTestCaseError:
+## Testing variable/expression:  f(1)
+## could not find function "f"
+```
+
+---
+
+# Default error message 
+
+- Function Return Nothing
+
+```r
+f <- function(x) {}
+test_that('',{
+  expect_equal(f(1), 1)
+})
+## AutoTestCaseError:
+## Testing variable/expression:  f(1)
+## We expect your answer returns type "numeric", but it returns "NULL" instead.
+## Do you forget to return something in your function definition?
+```
+
+---
+
+# Default error message 
+
+- Result Not Equal
+
+```r
+f <- function(x) ifelse(x > 5, x + 1, x)
+test_that('',{
+  for (i in 1:10){
+    expect_equal(f(i), i + 1)
+  }
+})
+## AutoTestCaseError:
+## Testing variable/expression:  f(i)
+## Your answer is 1, which is not equal to the correct answer 2
+```
+
+---
+
+class: center, middle, inverse
+
+# Read more cases here: [Error Cases](http://autotest-docs.readthedocs.io/en/latest/R/4-example.html)
+
+
+---
+
+class: center, middle, inverse
+
+# Automatic Tracing
+
+---
+# Automatic Tracing
+
+```{r, eval=FALSE}
+test_that('testing x', {
+    expect_equal(x, 1)
+})
+## AutoTestCaseError:
+{{## Testing variable/expression: x}}
+## object ‘x’ not found
+```
+
+---
+# Automatic Tracing
+
+```{r, eval=FALSE}
+test_that('testing f(i)', {
+    expect_equal(f(i), i + 1)
+})
+## AutoTestCaseError:
+{{## Testing variable/expression: f(i)}}
+## could not find function "f"
+```
+
+
+---
+# Automatic Tracing
+
+When error occurs, the error message tells you what variable/expression
+we are testing. This feature is trying to **LOCATE** the error.
+
+- Almost all the `expect_XXX` functions support this feature.
+
+- Always put the tested object on the first argument
+
+.pull-left[
+### Right
+```r
+expect_equal(x, 1)
+```
+]
+
+.pull-right[
+### Wrong
+```r
+expect_equal(1, x)
+```
+]
+
+
+---
+# Automatic Tracing: drawback
+
+
+```{r, eval=FALSE}
+f <- function(x) 1
+test_that('testing f(i)', {
+  i = 1
+  expect_equal(f(i), i + 1)
+})
+## AutoTestCaseError:
+## Testing variable/expression: f(i)
+## Your answer is 1, which is not equal to the correct answer 2
+## The maximum tolerance is 1e-05
+```
+
+> Testing variable/expression: f(i)
+
+What is **i** here?
+
+---
+
+# Automatic Tracing: close it
+
+```{r, eval=FALSE}
+f <- function(x) 1
+test_that('testing f(i)', {
+  i = 1
+{{ expect_equal(f(i), i + 1, trace=FALSE)}}
+})
+## AutoTestCaseError:
+## Your answer is 1, which is not equal to the correct answer 2
+## The maximum tolerance is 1e-05
+```
+
+No trace here. Where this error comes from?
+
+---
+# Add Self-defined Error Message
+
+```{r, eval=FALSE}
+f <- function(x) 1
+test_that('testing f(i)', {
+  i = 1
+{{ registerPreMsg('In testing f(%s):', i)}}
+  expect_equal(f(i), i + 1, trace=FALSE)
+})
+## AutoTestCaseError:
+## In testing f(1):
+## Your answer is 1, which is not equal to the correct answer 2
+## The maximum tolerance is 1e-05
+```
+
+**registerPreMsg**: register error message before the default error
+
+---
+class: inverse, middle, center
+
+# Customiz Error Message
+
+
+---
+# Customiz Error Message
+
+- [registerPreMsg](): **register** error message **before** the default error
+
+
+- [registerPostMsg](): **register** error message **after** the default error
+
+- [addPreMsg](): **append** error message **before** the default error
+
+
+- [addPostMsg](): **append** error message **after** the default error
+
+
+---
+# Exmaple:
+
+```{r eval=FALSE}
+x = 1
+test_that('', {
+{{ registerPreMsg('Here is the default error message:')}}
+{{ registerPostMsg('----------------------')}}
+  expect_equal(x, 2)
+})
+## AutoTestCaseError:
+## Testing variable/expression:  x
+{{## Here is the default error message:}}
+## Your answer is 1, which is not equal to the correct answer 2
+## The maximum tolerance is 1e-05
+{{## ----------------------}}
+```
+
+---
+# Working Space: Bad Case
+
+The customized error message **works in the whole test block**(the `test_that` function call)
+
+
+```{r eval=FALSE}
+x = c(1, 3)
+test_that('', {
+{{ registerPreMsg('Test the first element of x:')}}
+  expect_equal(x[1], 1)  # pass
+  expect_equal(x[2], 2)
+})
+## AutoTestCaseError:
+## Testing variable/expression:  x[2]
+{{## Test the first element of x:}}
+## Your answer is 3, which is not equal to the correct answer 2
+## The maximum tolerance is 1e-05
+```
+
+Customized message show up when the second `expect_equal` call raise an error.
+
+---
+# Working Space: Good Case
+
+Clear after checking the first element.
+
+```{r eval=FALSE}
+x = c(1, 3)
+test_that('', {
+  registerPreMsg('Test the first element of x:')
+  expect_equal(x[1], 1) 
+{{ registerPreMsg('')}}
+  expect_equal(x[2], 2)
+})
+```
+
+---
+# Working Space
+
+```{r eval=FALSE}
+x = 1; y = 2
+test_that('', {
+{{ registerPreMsg('Test the first element of x:')}}
+  expect_equal(x, 1)  # pass
+})
+test_that('', {
+  expect_equal(y, 1)
+})
+## AutoTestCaseError:
+## Testing variable/expression:  y
+## Your answer is 1, which is not equal to the correct answer 2
+## The maximum tolerance is 1e-05
+```
+
+Customized message in the first test block does not affect the other test blocks.
+
+---
+# Customize Default Error Message
+
+Set `suppressErr=TRUE` to disable the default error, use `registerPostMsg` to add customized error message.
+
+```{r eval=FALSE}
+test_that('', {
+    registerPostMsg('You answer is wrong')
+    expect_equal(x, 2, suppressErr=TRUE)
+})
+## AutoTestCaseError:
+## Testing variable/expression:  x
+## You answer is wrong
+```
+
+
+---
+# Customize Default Error Message
+
+Answer:
+```{r}
+library(ggplot2)
+p_scatterplot <- ggplot(data = cars, aes(x = speed, y = dist))
+p_scatterplot <- p_scatterplot + geom_point()
+```
+
+Test Code:
+```{r eval=FALSE}
+library(autotest)
+test_that("test p_scatterplot", {
+  expect_is(p_scatterplot, 'ggplot')
+  
+  registerPostMsg('Did you map the `speed` column on the x axis?')
+  expect_true(unlist(p_scatterplot)$labels.x == 'speed', 
+              suppressErr=T)
+  registerPostMsg('Did you map the `dist` column on the y axis?')
+  expect_true(unlist(p_scatterplot)$labels.y == 'dist', 
+              suppressErr=T)
+  registerPostMsg('Did you add a point layer?')
+  expect_is(layer_grob(p_scatterplot)[[1]], 'points', suppressErr=T)
+})
+```
+
+
+---
+class: inverse, middle, center
+
+# Expect Functions
+
+
+---
+# Expect Functions
+
+- [expect_equal](): compare two objects
+
+- [expect_true](), [expect_false](), [expect_na](): logical
+
+- [expect_is](), [expect_length](): type and length
+
+- [expect_match](), [expect_output](), [expect_error](): strings
+
+---
+# expect_equal
+
+Support `integer`, `character`, `logical`, `double`, `factor`, `list`, `matrix` and `data.frame`.
+
+Here are the steps of comparing two objects:
+
+- Test class
+
+- Test length/dimension
+
+- Test values
+
+So [expect_equal(rep(1, 10), 1)]() will raise an error because of the length diff.
+
+---
+class: center, middle
+
+# [details of exepct_equal](http://autotest-docs.readthedocs.io/en/latest/R/2-expect_functions.html#numeric)
+
+
+---
+# exepct_equal
+
+Finally, `exepct_equal` can not compare missing values, unless two objects are identical.
+
+```{r eval=FALSE}
+x = c(1, NA, 3)
+names(x) = c('a', 'b', 'c')
+expect_equal(x, c(1, NA, 3))
+## AutoTestCaseError:
+## Testing variable/expression:  c(1, NA, 3)
+## Your answer conatins missing values NA, please check again.
+```
+
+```{r eval=FALSE}
+names(x) = NULL
+expect_equal(x, c(1, NA, 3))  # pass, because they are identical
+```
+
+
+
+---
+# expect_XXX(logical)
+
+[expect_true & expect_false & expect_na](): these functions are checking whehter the objects are TRUE/FALSE/NA.
+
+
+**Note**: they support testing a vector of logical values.
+
+```{r eval=FALSE}
+x = 1:10
+expect_true(x >= 1)
+```
+
+In the [testthat]() package, you have to write:
+```r
+testthat::expect_true(all(x >= 1))
+```
+
+
+---
+# expect_is & expect_length
+
+- [expect_is(x, 'integer')]() is equivalent to [expect_equal(class(x), 'integer')](). 
+
+- [expect_length(x, 10)]() is equivalent to [expect_equal(length(x), 10)]().
+
+---
+# Example
+
+If you want to test whether [y]() is a vector of TRUE with length 10:
+
+```r
+test_that('', {
+    expect_length(y, 10)
+    expect_true(y)
+})
+
+# alternatively
+test_that('', {
+    expect_equal(y, rep(TRUE, 10))
+})
+```
+
+---
+## expect_match
+
+Whether string matches a pattern.
+
+```{r, eval=FALSE}
+expect_match('abc', 'a')  
+
+expect_match('abc', '[a-z]{3}')  # using regular expression
+
+expect_match('abc', 'A', ignore.case=T)  # case insensitive
+
+# exactly match, not using regular expression
+expect_match('a(b', '(b', fixed=T)  
+```
+
+---
+# expect_output
+
+Capture the output and check whether it matches a pattern.
+
+```{r eval=FALSE}
+expect_output(print('abc'), 'a')  
+
+expect_output(cat('abc'), '[a-z]{3}')  # using regular expression
+
+expect_output(cat('abc'), 'A', ignore.case=T) # case insensitive
+```
+
+
+---
+# expect_error
+
+Check whether the expression raise an error.
+
+
+```{r eval=FALSE}
+expect_error(1 - '1')
+
+# check the error message matches our string
+expect_error(1 - '1', 'non-numeric argument to binary operator')
+
+# check the error message matches our pattern(regular expression)
+expect_error(1 - '1', 'non-numeric.*')
+```
+
+
+---
+# Summarize
+
+1. Easy to learn
+
+1. Works well without any extra settings
+
+1. Able to customize
+
+---
+class: center, middle
+
+# That's All!
+
+Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).
+
+The chakra comes from [remark.js](https://remarkjs.com), [**knitr**](http://yihui.name/knitr), and [R Markdown](https://rmarkdown.rstudio.com).
