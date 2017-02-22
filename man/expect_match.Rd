@@ -5,7 +5,7 @@
 \title{Expectation: does string/output/message/warning/error match a regular expression?}
 \usage{
 expect_match(object, regexp, ..., all = TRUE, info = NULL, label = NULL,
-  trace = TRUE)
+  trace = TRUE, suppressErr = FALSE)
 }
 \arguments{
 \item{object}{object to test}

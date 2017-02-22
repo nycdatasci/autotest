@@ -11,13 +11,13 @@
 \title{Expectation: does code produce output/message/warning/error?}
 \usage{
 expect_output(object, regexp = NULL, ..., info = NULL, label = NULL,
-  trace = TRUE)
+  trace = TRUE, suppressErr = FALSE)
 
 expect_output_file(object, file, update = FALSE, ..., info = NULL,
   label = NULL, width = 80)
 
 expect_error(object, regexp = NULL, class = NULL, ..., info = NULL,
-  label = NULL, trace = TRUE)
+  label = NULL, trace = TRUE, suppressErr = FALSE)
 
 expect_message(object, regexp = NULL, ..., all = FALSE, info = NULL,
   label = NULL)

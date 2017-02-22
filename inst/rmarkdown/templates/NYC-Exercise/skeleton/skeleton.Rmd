@@ -1,0 +1,96 @@
+---
+title: "Example of Exercise"
+author: "Yalei Du"
+output:
+  html_document:
+    difficult: '1'
+    timeout: '2'
+    key: 'R,Python'
+---
+
+## Body
+
+Hi, this is the body of the exercise. Here is an example:
+
+In this exercise, you should assign the result of $1+1$ to the variable `x`.
+
+## Hint
+
+Here is the answer:
+
+```r
+x <- 2
+```
+
+## Pre_Code
+
+```{r pre_code}
+```
+
+## Set_Code
+
+```{r set_code, eval=FALSE}
+x <- # fill your code here
+```
+
+## Answer_Code
+
+```{r ans_code}
+x <- 1+1
+```
+
+## Test_Code
+
+```{r test_code}
+library(autotest)
+test_that('test x', {
+  expect_equal(x, 2)
+})
+```
+
+
+## Testings
+
+Check the error messages of wrong submissions. If the error message starts with 'AutoTestCaseError', it will be colored in blue. Otherwise,
+notice the red color message.
+
+```{r wrong_submission, echo=FALSE}
+variable_name = 'x'
+testing_values = list(NULL, NA, numeric(), 
+                      character(), logical(),
+                      list(), matrix(), data.frame()
+                      )
+```
+
+
+```{r testing, echo=FALSE, results='asis'}
+library(knitr)
+run_chunk <- function(chunk_name){
+  code = paste0(knitr:::knit_code$get()[[chunk_name]], collapse = '\n')
+  eval(parse(text=code))
+}
+knit_print.error = function(x, ...) {
+  asis_output(x)
+}
+
+new_error = function(x) {
+  x = gsub('\n', '</br>', x)
+  col = ifelse(startsWith(x, 'AutoTestCaseError'), 'blue', 'red')
+  x = sprintf('</br><span style="color:%s">%s</span></br>', col, x)
+  structure(x, class = "error") 
+}
+
+# test the error messages
+for (val in testing_values){
+  cat('Input: ', deparse(val))
+  tryCatch({
+    run_chunk('pre_code')
+    assign(variable_name, val)
+    run_chunk('test_code')
+  }, 
+  error = function(e) cat(new_error(e$message))
+  )
+}
+```
+
+

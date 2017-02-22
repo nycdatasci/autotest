@@ -27,7 +27,7 @@ Suggests:
     withr,
     covr
 License: MIT + file LICENSE
-Collate:
+Collate: 
     'auto-test.R'
     'colour-text.R'
     'compare-time.R'
@@ -36,6 +36,7 @@ Collate:
     'describe.R'
     'error-handler.R'
     'evaluate-promise.R'
+    'exercise.R'
     'expect-comparison.R'
     'expect-equal-to-reference.R'
     'expect-equality.R'

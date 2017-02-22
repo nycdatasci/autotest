@@ -4,7 +4,7 @@
 \alias{expect_length}
 \title{Expectation: does a vector have the specified length?}
 \usage{
-expect_length(object, n, trace = TRUE)
+expect_length(object, n, trace = TRUE, suppressErr = FALSE)
 }
 \arguments{
 \item{object}{object to test}

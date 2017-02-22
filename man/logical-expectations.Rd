@@ -7,12 +7,14 @@
 \alias{expect_na}
 \title{Expectation: is the object true/false?}
 \usage{
-expect_true(object, info = NULL, label = NULL, trace = TRUE)
+expect_true(object, info = NULL, label = NULL, trace = TRUE,
+  suppressErr = FALSE)
 
-expect_false(object, info = NULL, label = NULL, trace = TRUE)
+expect_false(object, info = NULL, label = NULL, trace = TRUE,
+  suppressErr = FALSE)
 
 expect_na(object, info = NULL, label = NULL, method = "all",
-  trace = TRUE)
+  trace = TRUE, suppressErr = FALSE)
 }
 \arguments{
 \item{object}{object to test}

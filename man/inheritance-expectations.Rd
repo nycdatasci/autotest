@@ -5,7 +5,8 @@
 \alias{expect_is}
 \title{Expectation: does the object inherit from a class, or a base type}
 \usage{
-expect_is(object, class, info = NULL, label = NULL, trace = TRUE)
+expect_is(object, class, info = NULL, label = NULL, trace = TRUE,
+  suppressErr = FALSE)
 }
 \arguments{
 \item{object}{object to test}

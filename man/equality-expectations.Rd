@@ -6,7 +6,7 @@
 \title{Expectation: is the object equal to a value?}
 \usage{
 expect_equal(object, expected, ..., info = NULL, label = NULL,
-  expected.label = NULL, trace = TRUE)
+  expected.label = NULL, trace = TRUE, suppressErr = FALSE)
 }
 \arguments{
 \item{object}{object to test}
