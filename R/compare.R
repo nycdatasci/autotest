@@ -120,7 +120,7 @@ compare.integer <- function(x, y, ..., tolerance=1e-15){
   if (length_res$equal != TRUE) return(length_res)
 
   # test values
-  if (all(x - y < tolerance) || all(x == y)){
+  if (all(abs(x - y) < tolerance) || all(x == y)){
     return(comparison())
   }
   if (x_length == 1){
