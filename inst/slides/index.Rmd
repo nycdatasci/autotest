@@ -6,6 +6,9 @@ date: '`r Sys.Date()`'
 output:
   xaringan::moon_reader:
     lib_dir: libs
+    css: footer.css
+    includes:
+      after_body: footer.js
     nature:
       highlightStyle: github
       highlightLines: true
@@ -198,7 +201,9 @@ test_that('',{
 
 class: center, middle, inverse
 
-# Read more cases here: [Error Cases](http://autotest-docs.readthedocs.io/en/latest/R/4-example.html)
+# Read more cases here
+
+## [Error Cases](http://autotest-docs.readthedocs.io/en/latest/R/4-example.html)
 
 
 ---
@@ -408,7 +413,7 @@ test_that('', {
 Customized message in the first test block does not affect the other test blocks.
 
 ---
-# Customize Default Error Message
+# Customized Error
 
 Set `suppressErr=TRUE` to disable the default error, use `registerPostMsg` to add customized error message.
 
@@ -424,7 +429,7 @@ test_that('', {
 
 
 ---
-# Customize Default Error Message
+# Customized Error
 
 Answer:
 ```{r}
@@ -486,7 +491,7 @@ So [expect_equal(rep(1, 10), 1)]() will raise an error because of the length dif
 ---
 class: center, middle
 
-# [details of exepct_equal](http://autotest-docs.readthedocs.io/en/latest/R/2-expect_functions.html#numeric)
+# [Details of exepct_equal](http://autotest-docs.readthedocs.io/en/latest/R/2-expect_functions.html#numeric)
 
 
 ---
