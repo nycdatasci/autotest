@@ -41,7 +41,7 @@ compare <- function(x, y, ...) {
     msg = sprintf('We expect your answer returns type "%s", but it returns "%s" instead.', mark_type(y_class), mark_type(x_class))
     if (all(is.null(x))){
       msg = paste(msg,
-                  '\nDo you forget to return something in your function definition?',
+                  '\nDid you forget to return something in your function definition?',
                   sep = '\n'
                   )
     }
@@ -88,7 +88,7 @@ print_out <- function(x, ...) {
 compare_length <- function(x, y){
   x_length = length(x); y_length = length(y)
   if (x_length != y_length){
-    msg = sprintf('The length of your answer is %s, which should be %s in the correct answer', x_length, y_length)
+    msg = sprintf('The length of your answer is %s, which is different from the length of the correct answer, %s.', x_length, y_length)
     return(comparison(FALSE, msg))
   }else{
     return(list(equal=TRUE))
@@ -124,11 +124,11 @@ compare.integer <- function(x, y, ..., tolerance=1e-15){
     return(comparison())
   }
   if (x_length == 1){
-    msg = sprintf('Your answer is %s, which is not equal to the correct answer %s', x, y)
+    msg = sprintf('Your answer is %s, which is not equal to the correct answer, %s.', x, y)
     return(comparison(FALSE, msg))
   }else{
     index = which(x != y)[1]
-    msg = sprintf('The %sth element of your vector is %s, which is not equal to the correct answer %s', index, x[index], y[index])
+    msg = sprintf('Element number %s of your vector is %s, which is not equal to the correct answer, %s.', index, x[index], y[index])
     return(comparison(FALSE, msg))
   }
 }
@@ -150,7 +150,7 @@ compare.character <- function(x, y, ...){
     return(comparison(FALSE, msg))
   }else{
     index = which(x != y)[1]
-    msg = sprintf('The %sth element of your vector is "%s", which is not equal to the correct answer "%s"', index, x[index], y[index])
+    msg = sprintf('Element number %s of your vector is "%s", which is not equal to the correct answer "%s"', index, x[index], y[index])
     return(comparison(FALSE, msg))
   }
 }
@@ -169,7 +169,7 @@ compare.numeric <- function(x, y, ..., tolerance = 1e-5){
     msg = sprintf('Your answer is %s, which is not equal to the correct answer %s', x, y)
   }else{
     index = which(!compare_result)[1]
-    msg = sprintf('The %sth element of your vector is %s, which is not equal to the correct answer %s', index, x[index], y[index])
+    msg = sprintf('Element number %s of your vector is %s, which is not equal to the correct answer %s', index, x[index], y[index])
   }
   msg = paste(msg, '\nThe maximum tolerance is ', tolerance, sep='')
   return(comparison(FALSE, msg))
@@ -183,13 +183,13 @@ compare.factor <- function(x, y, ...){
   if (length_res$equal != TRUE) return(length_res)
   # test sorted factor
   if (is.ordered(y) && !is.ordered(x)){
-    msg = 'The answer is an ordered factor, your factor is not unordered.\nUse the `as.ordered` function to convert you answer to an ordered factor.'
+    msg = 'The answer is an ordered factor, your factor is unordered.\nUse the `as.ordered` function to convert you answer to an ordered factor.'
     return(comparison(FALSE, msg))
   }
   # test levels
   x_levels = levels(x); y_levels = levels(y)
   if ( !identical(x_levels, y_levels) ){
-    msg = sprintf('The levels of your factor is: [%s].\nWhile the levles of the correct answer is: [%s]',
+    msg = sprintf('The levels of your factor are: [%s].\nWhile the levels of the correct answer are: [%s]',
                   paste0(x_levels, collapse = ', '),
                   paste0(y_levels, collapse = ', '))
     return(comparison(FALSE, msg))
@@ -199,7 +199,7 @@ compare.factor <- function(x, y, ...){
   compare_res = as.character(x) == as.character(y)
   if ( !all(compare_res) ){
     index = which(!compare_res)[1]
-    msg = sprintf('The %sth element of your factor is %s, which is not equal to the correct answer %s',
+    msg = sprintf('Element number %s of your factor is %s, which is not equal to the correct answer %s',
                   index, as.character(x[index]), as.character(y[index]))
     return(comparison(FALSE, msg))
   }
@@ -216,7 +216,7 @@ compare.list <- function(x, y, ..., test.names = TRUE){
 
   # test names
   if ( test.names && any(names(x) != names(y)) ){
-    msg=sprintf('The names of your list is [%s], which is not euqal to the correct answer [%s]',
+    msg=sprintf('The names of your list are [%s], which is not equal to the correct answer [%s]',
                 paste0(names(x), collapse = ', '),
                 paste0(names(y), collapse = ', '))
     return(comparison(FALSE, msg))
@@ -226,7 +226,7 @@ compare.list <- function(x, y, ..., test.names = TRUE){
   for (i in seq_along(x)){
     res = compare(x[[i]], y[[i]], ...)
     if (!res$equal) {
-      msg = sprintf('The type of the %dth element in your list is `%s`.\nIn testing the %dth element:\n%s',
+      msg = sprintf('The type of element number %d in your list is `%s`.\nIn testing element number %d:\n%s',
                     i, class(x[[i]]), i, res$message)
       return(comparison(FALSE, msg))
     }
@@ -239,7 +239,7 @@ compare.matrix <- function(x, y, ..., tolerance = 1e-5){
   # test dimension
   x_dim=dim(x); y_dim = dim(y)
   if (any(x_dim != y_dim)){
-    msg = sprintf('The dimension of your matrix is (%s), which is not equal to the dimension of correct answer: (%s).',
+    msg = sprintf('The dimension of your matrix are (%s), which are not equal to the dimension of the correct answer: (%s).',
                   paste0(x_dim, collapse = ','),
                   paste0(y_dim, collapse = ',')
     )
@@ -250,7 +250,7 @@ compare.matrix <- function(x, y, ..., tolerance = 1e-5){
   if ( is.numeric(x) && is.numeric(y) ){
     compare_res = abs(x - y) <= tolerance | x == y
   }else if (class(x[1,1]) != class(y[1,1])){
-    msg = sprintf('The type of the data in your matrix is `%s`, which should be `%s`',
+    msg = sprintf('The type of the data in your matrix is `%s`, when it should be `%s`',
                   class(x[1,1]), class(y[1,1])
                   )
     return(comparison(FALSE, msg))
@@ -259,7 +259,7 @@ compare.matrix <- function(x, y, ..., tolerance = 1e-5){
   }
   if (any(!compare_res)){
     index = which(!compare_res, arr.ind=T)[1, ]
-    msg = 'The value in %sth row, %sth column of your matrix is %s, which is not equal to the correct answer %s'
+    msg = 'The value in %sth row, %sth column of your matrix is %s, which is not equal to the correct answer, %s.'
     msg = sprintf(msg, index[1], index[2], x[index[1], index[2]], y[index[1], index[2]])
     return(comparison(FALSE, msg))
   }
@@ -271,7 +271,7 @@ compare.data.frame <- function(x, y, ..., tolerance = 1e-5, test.rowname=FALSE, 
   # test dimension
   x_dim=dim(x); y_dim = dim(y)
   if (!all(x_dim == y_dim)){
-    msg = sprintf('The dimension of your data.frame is (%s), which is not equal to the dimension of correct answer: (%s).',
+    msg = sprintf('The dimensions of your data.frame are (%s), which are not equal to the dimension of the correct answer: (%s).',
                   paste0(x_dim, collapse = ','),
                   paste0(y_dim, collapse = ',')
     )
@@ -282,7 +282,7 @@ compare.data.frame <- function(x, y, ..., tolerance = 1e-5, test.rowname=FALSE, 
   if (test.colname){
     col_diff = setdiff(colnames(y), colnames(x))
     if ( length(col_diff) > 0){
-      msg = sprintf('The column names of your data.frame are [%s].\nThe column names should be: [%s].\nYou columns do not contain: [%s].',
+      msg = sprintf('The column names of your data.frame are [%s].\nThe column names should be: [%s].\nYour columns do not contain: [%s].',
                     paste(colnames(x), collapse = ','),
                     paste(colnames(y), collapse = ','),
                     paste(col_diff, collapse = ',')
@@ -319,10 +319,10 @@ compare.tbl_df <- function(x, y, ...){
 # Common helpers ---------------------------------------------------------------
 
 same_length <- function(x, y) length(x) == length(y)
-diff_length <- function(x, y) difference(fmt = "Lengths differ: %i vs %i", length(x), length(y))
+diff_length <- function(x, y) difference(fmt = "Lengths differ: %i vs. %i", length(x), length(y))
 
 same_type <- function(x, y) identical(typeof(x), typeof(y))
-diff_type <- function(x, y) difference(fmt = "Types not compatible: %s vs %s", typeof(x), typeof(y))
+diff_type <- function(x, y) difference(fmt = "Types not compatible: %s vs. %s", typeof(x), typeof(y))
 
 same_class <- function(x, y) {
   if (!is.object(x) && !is.object(y))
@@ -330,7 +330,7 @@ same_class <- function(x, y) {
   identical(class(x), class(y))
 }
 diff_class <- function(x, y) {
-  difference(fmt = "Classes differ: %s vs %s", klass(x), klass(y))
+  difference(fmt = "Classes differ: %s vs. %s", klass(x), klass(y))
 }
 
 same_attr <- function(x, y) {
