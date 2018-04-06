@@ -74,6 +74,7 @@ Collate:
     'skip.R'
     'source.R'
     'teardown.R'
+    'test-case.R'
     'test-compiled-code.R'
     'test-example.R'
     'test-files.R'
